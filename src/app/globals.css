@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --brand-dark: #072018;
+    --brand-dark-surface: #0E362A;
+    --brand-green: #229938;
+    --brand-green-hover: #1c822e;
+    --brand-light: #F9F9F6;
+    --brand-text: #1F2937;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #072018;
+    color: var(--brand-text);
+    font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+.font-sans {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.font-script {
+  font-family: var(--font-script), 'Dancing Script', cursive, serif;
+}
+
+/* Glassmorphism helpers */
+.glass-stats-bar {
+  background: rgba(13, 40, 30, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bg-dark-pattern {
+  background-color: #072018;
+  background-image: radial-gradient(rgba(34, 197, 94, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
