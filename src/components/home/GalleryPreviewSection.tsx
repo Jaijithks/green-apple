@@ -1,90 +1,150 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import SectionHeader from "@/components/ui/SectionHeader";
-import { galleryItemsData } from "@/data/gallery";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 
-export default function GalleryPreviewSection() {
-  const [scrollIndex, setScrollIndex] = useState(0);
+interface GalleryPreviewProps {
+  onOpenQuote?: () => void;
+}
 
-  const handlePrev = () => {
-    setScrollIndex((prev) => (prev > 0 ? prev - 1 : galleryItemsData.length - 1));
-  };
+const FEATURED_EVENTS = [
+  {
+    id: "event-1",
+    title: "Grand Wedding Reception",
+    category: "ROYAL WEDDING",
+    location: "Kothamangalam",
+    guests: "800+ Guests",
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
+    description: "Multi-tier live seafood counters, traditional Kerala Sadhya, and bespoke candlelit floral styling.",
+    span: "lg:col-span-8",
+  },
+  {
+    id: "event-2",
+    title: "Artisanal Dessert & High Tea",
+    category: "LIVE COUNTERS",
+    location: "Ernakulam",
+    guests: "350 Guests",
+    image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80",
+    description: "Custom pastry displays, signature mocktails, and gourmet canapé stations.",
+    span: "lg:col-span-4",
+  },
+  {
+    id: "event-3",
+    title: "Outdoor Engagement Banquet",
+    category: "ENGAGEMENTS",
+    location: "Muvattupuzha",
+    guests: "450 Guests",
+    image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80",
+    description: "Under-the-stars dining featuring dum biryani stations and artisanal welcome drinks.",
+    span: "lg:col-span-4",
+  },
+  {
+    id: "event-4",
+    title: "Corporate Annual Gala Feast",
+    category: "CORPORATE",
+    location: "Kochi",
+    guests: "600 Guests",
+    image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80",
+    description: "Executive multi-cuisine buffet, flawless service timing, and premium presentation.",
+    span: "lg:col-span-8",
+  },
+];
 
-  const handleNext = () => {
-    setScrollIndex((prev) => (prev < galleryItemsData.length - 1 ? prev + 1 : 0));
-  };
-
+export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewProps) {
   return (
-    <section className="py-20 bg-white text-gray-900 border-b border-gray-200/60 overflow-hidden">
+    <section id="events" className="py-20 sm:py-28 bg-[#FBF9F5] text-gray-900 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          subtitle="OUR PORTFOLIO"
-          title="Moments We've Created"
-          centered={true}
-        />
+        {/* Section Header with Editorial Metadata */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 border-b border-gray-200 pb-8">
+          <div>
+            <div className="flex items-center space-x-2 mb-3">
+              <span className="w-6 h-[1.5px] bg-[#229938]" />
+              <span className="text-xs tracking-[0.25em] uppercase text-emerald-800 font-semibold">
+                CURATED PORTFOLIO
+              </span>
+            </div>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-gray-900">
+              Signature Celebrations
+            </h2>
+          </div>
 
-        {/* Carousel / Showcase Grid with Controls */}
-        <div className="mt-12 relative">
-          {/* Navigation Controls */}
-          <button
-            onClick={handlePrev}
-            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-emerald-800 text-white flex items-center justify-center shadow-lg hover:bg-emerald-600 transition-colors focus:outline-none"
-            aria-label="Previous Gallery Image"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-
-          <button
-            onClick={handleNext}
-            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-emerald-800 text-white flex items-center justify-center shadow-lg hover:bg-emerald-600 transition-colors focus:outline-none"
-            aria-label="Next Gallery Image"
-          >
-            <ArrowRight className="w-5 h-5" />
-          </button>
-
-          {/* Image Strip */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 px-6 sm:px-8">
-            {galleryItemsData.map((item, idx) => (
-              <div
-                key={item.id}
-                className={`relative h-56 sm:h-64 rounded-xl overflow-hidden shadow-md group border border-gray-100 transition-all duration-300 ${
-                  idx === scrollIndex ? "ring-2 ring-emerald-500 scale-105 z-10" : "opacity-90 hover:opacity-100"
-                }`}
-              >
-                <Image
-                  src={item.image}
-                  alt={item.alt}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold">
-                      {item.category}
-                    </span>
-                    <p className="text-xs font-bold text-white leading-tight">
-                      {item.title}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="mt-4 md:mt-0 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <p className="text-xs sm:text-sm text-gray-600 font-light max-w-sm">
+              A glimpse into the heartfelt weddings, banquets, and milestone celebrations curated across Kerala.
+            </p>
           </div>
         </div>
 
-        {/* View Full Gallery Button */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/gallery"
-            className="inline-flex items-center justify-center px-7 py-3 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-md hover:shadow-emerald-900/40 group"
+        {/* Asymmetric Editorial Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+          {FEATURED_EVENTS.map((event) => (
+            <div
+              key={event.id}
+              className={`${event.span} group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-white shadow-xl border border-gray-100 hover:border-emerald-500/30 transition-all duration-500 flex flex-col min-h-[380px] sm:min-h-[440px]`}
+            >
+              {/* Event Image */}
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  fill
+                  className="object-cover object-center group-hover:scale-106 transition-transform duration-700 ease-out"
+                  sizes="(max-width: 1024px) 100vw, 66vw"
+                />
+                {/* Vignette Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 group-hover:from-black/90 transition-colors duration-500" />
+              </div>
+
+              {/* Top Tag Badges */}
+              <div className="relative z-10 p-6 sm:p-8 flex justify-between items-start">
+                <span className="px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase bg-white/20 backdrop-blur-md text-white border border-white/30">
+                  {event.category}
+                </span>
+
+                <span className="text-xs text-white/80 font-light tracking-wide bg-black/30 backdrop-blur-xs px-3 py-1 rounded-full">
+                  {event.location}
+                </span>
+              </div>
+
+              {/* Bottom Editorial Details */}
+              <div className="relative z-10 mt-auto p-6 sm:p-8 text-white space-y-2 transform group-hover:-translate-y-1 transition-transform duration-300">
+                <h3 className="font-serif text-2xl sm:text-3xl text-white font-normal group-hover:text-emerald-300 transition-colors flex items-center justify-between">
+                  <span>{event.title}</span>
+                  <ArrowUpRight className="w-5 h-5 text-white/70 group-hover:text-emerald-300 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
+                </h3>
+
+                <p className="text-xs sm:text-sm text-gray-200 font-light line-clamp-2 max-w-xl leading-relaxed">
+                  {event.description}
+                </p>
+
+                <div className="pt-2 text-[11px] uppercase tracking-wider text-emerald-400 font-medium">
+                  {event.guests}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* View Instagram / Plan Button */}
+        <div className="mt-12 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
+          <a
+            href="https://www.instagram.com/_green_apple_catering_/?hl=en"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-7 py-3 rounded-full text-xs font-semibold uppercase tracking-[0.15em] bg-emerald-800 hover:bg-emerald-700 text-white transition-all shadow-md hover:shadow-emerald-950/40"
           >
-            <span>View Full Gallery</span>
-            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
+            <span>Follow @_green_apple_catering_</span>
+            <ArrowUpRight className="w-4 h-4 ml-1.5" />
+          </a>
+
+          <button
+            onClick={onOpenQuote}
+            className="inline-flex items-center px-7 py-3 rounded-full text-xs font-semibold uppercase tracking-[0.15em] bg-white hover:bg-gray-100 text-gray-900 border border-gray-200 transition-all shadow-sm cursor-pointer"
+          >
+            <span>Inquire for Your Date</span>
+          </button>
         </div>
       </div>
     </section>

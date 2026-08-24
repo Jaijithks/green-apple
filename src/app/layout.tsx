@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Dancing_Script } from "next/font/google";
+import { Cormorant_Garamond, Inter, Dancing_Script } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/data/site";
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -20,6 +21,7 @@ const inter = Inter({
 const dancingScript = Dancing_Script({
   variable: "--font-script",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -85,15 +87,14 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable} ${dancingScript.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${inter.variable} ${dancingScript.variable}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen flex flex-col antialiased">
-        <Navbar />
+      <body className="min-h-screen flex flex-col antialiased bg-[#F7F5EF] text-[#1F2937] selection:bg-[#229938] selection:text-white">
         <main className="flex-grow">{children}</main>
         <Footer />
       </body>

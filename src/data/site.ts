@@ -46,16 +46,11 @@ export const siteConfig: SiteConfig = {
     whatsapp: "919946061122",
   },
   social: {
-    instagram: "https://instagram.com",
+    instagram: "https://www.instagram.com/_green_apple_catering_/?hl=en",
     whatsapp: "https://wa.me/919946061122",
-    location: "https://maps.google.com",
+    location: "https://maps.google.com/?q=Green+Apple+Catering+Kothamangalam",
   },
-  stats: [
-    { value: "100+", label: "Events Catered", icon: "ChefHat" },
-    { value: "5000+", label: "Happy Clients", icon: "UsersGroup" },
-    { value: "50+", label: "Delicious Menus", icon: "ServingDish" },
-    { value: "10+", label: "Years of Experience", icon: "AwardBadge" },
-  ],
+  stats: [],
   navLinks: [
     { label: "Home", href: "/" },
     { label: "About Us", href: "/about" },

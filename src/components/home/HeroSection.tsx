@@ -1,328 +1,168 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { siteConfig } from "@/data/site";
-import { heroSlides } from "@/data/heroSlides";
-import HeroBackgroundSlider from "./hero/HeroBackgroundSlider";
-import HeroSliderControls from "./hero/HeroSliderControls";
-import {
-  RingsIcon,
-  CateringDishIcon,
-  DecorationFlowerIcon,
-  EventsCalendarIcon,
-  WhatsAppIcon,
-  InstagramIcon,
-  LocationPinIcon,
-} from "@/components/ui/Icons";
+import Navbar from "@/components/layout/Navbar";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const AUTOPLAY_INTERVAL = 4000; // 4 seconds per slide
+interface HeroSectionProps {
+  onOpenQuote?: () => void;
+}
 
-export default function HeroSection() {
-  const activeSlides = heroSlides.filter((slide) => slide.isActive);
-  const totalSlides = activeSlides.length;
+const HERO_SLIDES = [
+  {
+    id: "slide-weddings",
+    url: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=85",
+    alt: "Green Apple Catering Grand Wedding Banquet and Floral Ambiance",
+    tag: "KOTHAMANGALAM, KERALA",
+    title: "Weddings",
+    subtitle: "Bespoke feasts for your once-in-a-lifetime celebration",
+  },
+  {
+    id: "slide-catering",
+    url: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=2000&q=85",
+    alt: "Green Apple Catering chefs plating artisanal gourmet appetizers on long platters",
+    tag: "ARTISANAL FLAVOURS",
+    title: "Catering",
+    subtitle: "Thoughtfully crafted menus for memorable gatherings",
+  },
+  {
+    id: "slide-celebrations",
+    url: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=2000&q=85",
+    alt: "Green Apple Gourmet Hospitality and Celebration Event",
+    tag: "SIGNATURE EVENTS",
+    title: "Celebrations",
+    subtitle: "Unforgettable moments curated with warm Kerala hospitality",
+  },
+];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+export default function HeroSection({ onOpenQuote }: HeroSectionProps) {
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const touchStartXRef = useRef<number | null>(null);
-  const touchEndXRef = useRef<number | null>(null);
 
-  // Clear and reset the 4-second autoplay timer
-  const resetTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
   }, []);
 
-  const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % totalSlides);
-  }, [totalSlides]);
-
-  const handlePrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-  }, [totalSlides]);
-
-  const handleSelect = useCallback((index: number) => {
-    setCurrentIndex(index);
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
   }, []);
 
-  // Manual navigation handlers that reset the timer
-  const onManualNext = useCallback(() => {
-    handleNext();
-    resetTimer();
-  }, [handleNext, resetTimer]);
-
-  const onManualPrev = useCallback(() => {
-    handlePrev();
-    resetTimer();
-  }, [handlePrev, resetTimer]);
-
-  const onManualSelect = useCallback(
-    (index: number) => {
-      handleSelect(index);
-      resetTimer();
-    },
-    [handleSelect, resetTimer]
-  );
-
-  // Touch Swipe Handlers for mobile UX
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.targetTouches[0].clientX;
-    touchEndXRef.current = null;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndXRef.current = e.targetTouches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-    if (touchStartXRef.current !== null && touchEndXRef.current !== null) {
-      const distance = touchStartXRef.current - touchEndXRef.current;
-      const minSwipeDistance = 45; // px
-
-      if (distance > minSwipeDistance) {
-        // Swiped Left -> Next
-        onManualNext();
-      } else if (distance < -minSwipeDistance) {
-        // Swiped Right -> Prev
-        onManualPrev();
-      }
-    }
-    touchStartXRef.current = null;
-    touchEndXRef.current = null;
-  };
-
-  // Autoplay setup with reduced motion check
   useEffect(() => {
-    if (totalSlides <= 1 || isPaused) {
-      resetTimer();
-      return;
-    }
-
-    // Respect prefers-reduced-motion
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReducedMotion) {
-      return;
-    }
-
+    if (isPaused) return;
     timerRef.current = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % totalSlides);
-    }, AUTOPLAY_INTERVAL);
+      nextSlide();
+    }, 6000);
 
     return () => {
-      resetTimer();
+      if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [currentIndex, isPaused, totalSlides, resetTimer]);
+  }, [isPaused, nextSlide]);
 
-  const categoryStrip = [
-    { label: "WEDDINGS", icon: RingsIcon, href: "/services#weddings" },
-    { label: "CATERING", icon: CateringDishIcon, href: "/services#catering" },
-    { label: "DECORATION", icon: DecorationFlowerIcon, href: "/services#decoration" },
-    { label: "EVENTS", icon: EventsCalendarIcon, href: "/events" },
-  ];
+  const slide = HERO_SLIDES[currentSlide];
 
   return (
-    <section
-      className="relative bg-[#072018] text-white min-h-screen flex flex-col justify-center overflow-hidden py-10 sm:py-16 select-none sm:select-auto"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      aria-roledescription="carousel"
-      aria-label="Hero showcase"
-    >
-      {/* Background Image Carousel Slider */}
-      <HeroBackgroundSlider
-        slides={activeSlides}
-        currentIndex={currentIndex}
-        onIndexChange={setCurrentIndex}
-      />
+    <section className="w-full pt-3 sm:pt-4 px-3 sm:px-6 md:px-7 lg:px-8 max-w-[1536px] mx-auto">
+      {/* Tall Grand Editorial Hero Container */}
+      <div
+        className="relative w-full h-[680px] sm:h-[700px] lg:h-[730px] rounded-t-[32px] sm:rounded-t-[40px] md:rounded-t-[46px] overflow-hidden shadow-2xl flex flex-col justify-between select-none"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        {/* Background Slide Images with Slow Crossfade */}
+        {HERO_SLIDES.map((item, idx) => (
+          <div
+            key={item.id}
+            className={`absolute inset-0 transition-all duration-1000 ease-out ${
+              idx === currentSlide
+                ? "opacity-100 scale-100 z-0"
+                : "opacity-0 scale-105 pointer-events-none -z-10"
+            }`}
+            style={{ transitionProperty: "opacity, transform", transitionDuration: "1400ms" }}
+          >
+            <Image
+              src={item.url}
+              alt={item.alt}
+              fill
+              priority={idx === 0}
+              className="object-cover object-[center_38%]"
+              sizes="(max-width: 1536px) 100vw, 1536px"
+            />
+            {/* Subtle, soft layered translucent overlay to preserve warm lighting and rich details */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/55" />
+            <div className="absolute inset-0 bg-[#072018]/20 mix-blend-multiply" />
+          </div>
+        ))}
 
-      {/* Main Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-between">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-1">
-          {/* Left Column: Hero Content & CTAs */}
-          <div className="lg:col-span-8 max-w-2xl space-y-6">
-            {/* Top Tagline */}
-            <div className="inline-flex items-center space-x-2 text-emerald-400 text-xs sm:text-sm tracking-widest uppercase font-semibold">
-              <span>{siteConfig.heroTagline}</span>
-            </div>
+        {/* Top Editorial Overlaid Navbar */}
+        <Navbar onOpenQuote={onOpenQuote} />
 
-            {/* H1 Main Headline */}
-            <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-normal tracking-tight text-white leading-[1.15]">
-              Make Your <br />
-              Moments <br />
-              <span className="font-script italic text-[#4ade80] font-normal text-5xl sm:text-7xl md:text-8xl inline-block my-1 pr-2">
-                Memorable
-              </span>{" "}
-              <br />
-              with Flavours
-            </h1>
-
-            {/* Green Accent Line (Mobile reference) */}
-            <div className="w-12 h-1 bg-[#229938] rounded-full sm:hidden" />
-
-            {/* Body Description */}
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 font-light leading-relaxed max-w-xl">
-              {siteConfig.description}
-            </p>
-
-            {/* Action Buttons */}
-            <div className="pt-2 flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
-              {/* Plan Your Event -> */}
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl sm:rounded-full text-sm font-semibold bg-[#229938] hover:bg-[#1c822e] text-white transition-all shadow-lg shadow-emerald-950/60 group text-center"
-              >
-                <span>Plan Your Event</span>
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Link>
-
-              {/* Explore Our Events -> */}
-              <Link
-                href="/events"
-                className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl sm:rounded-full text-sm font-medium bg-white/5 hover:bg-white/15 border border-white/20 text-white transition-all backdrop-blur-xs group text-center"
-              >
-                <span>Explore Our Events</span>
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-
-            {/* Quick Service Categories Bar */}
-            <div className="pt-6 sm:pt-8">
-              <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-4 border-t border-white/10">
-                {categoryStrip.map((item, idx) => {
-                  const IconComp = item.icon;
-                  const isLast = idx === categoryStrip.length - 1;
-                  return (
-                    <React.Fragment key={item.label}>
-                      <Link
-                        href={item.href}
-                        className="flex items-center space-x-2.5 group hover:opacity-100 opacity-90 transition-opacity"
-                      >
-                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-emerald-500/60 bg-emerald-950/40 text-emerald-400 group-hover:bg-[#229938] group-hover:text-white group-hover:border-[#229938] flex items-center justify-center transition-all shadow-xs">
-                          <IconComp className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </div>
-                        <span className="text-xs sm:text-sm font-semibold tracking-wider text-gray-200 group-hover:text-white uppercase">
-                          {item.label}
-                        </span>
-                      </Link>
-
-                      {!isLast && (
-                        <span className="hidden sm:inline-block text-gray-600 font-light">
-                          |
-                        </span>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-              </div>
-            </div>
+        {/* Optically Centered Hero Headline Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-4xl mx-auto my-auto py-4">
+          {/* Tagline / Location */}
+          <div className="inline-flex items-center space-x-2 mb-2">
+            <span className="w-4 h-[1px] bg-emerald-400/80" />
+            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.32em] text-emerald-300 font-medium drop-shadow-md">
+              {slide.tag}
+            </span>
+            <span className="w-4 h-[1px] bg-emerald-400/80" />
           </div>
 
-          {/* Right Column (Desktop): Vertical Social Icons & Slider Controls */}
-          <div className="hidden lg:flex lg:col-span-4 flex-col justify-between items-end h-full min-h-[460px] py-4">
-            {/* Vertical Social Icons (Exact Outline Style without Border) */}
-            <div className="flex flex-col items-center space-y-6 my-auto">
-              {/* WhatsApp */}
-              <a
-                href={`https://wa.me/${siteConfig.contact.whatsapp}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Chat on WhatsApp"
-                className="text-white/85 hover:text-white hover:scale-115 transition-all duration-200 drop-shadow-md"
-              >
-                <WhatsAppIcon className="w-6 h-6" />
-              </a>
+          {/* Grand Cursive Script Title */}
+          <h1 className="font-script text-6xl sm:text-8xl md:text-9xl lg:text-[110px] text-white font-normal drop-shadow-lg tracking-tight transform -rotate-1 leading-none py-1 select-none">
+            {slide.title}
+          </h1>
 
-              {/* Instagram */}
-              <a
-                href={siteConfig.social.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Follow on Instagram"
-                className="text-white/85 hover:text-white hover:scale-115 transition-all duration-200 drop-shadow-md"
-              >
-                <InstagramIcon className="w-6 h-6" />
-              </a>
+          {/* Subtitle */}
+          <p className="font-serif italic text-lg sm:text-2xl md:text-3xl text-white/95 tracking-wide max-w-2xl mt-1 drop-shadow-md font-light">
+            {slide.subtitle}
+          </p>
 
-              {/* Location Pin */}
-              <a
-                href={siteConfig.social.location}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Find our Location"
-                className="text-white/85 hover:text-white hover:scale-115 transition-all duration-200 drop-shadow-md"
-              >
-                <LocationPinIcon className="w-6 h-6" />
-              </a>
-            </div>
+          {/* Fine subtle separator line */}
+          <div className="w-12 h-[1px] bg-white/40 my-4 sm:my-5" />
 
-            {/* Desktop Hero Slider Indicator (01 ───── 03) */}
-            <div className="pt-6">
-              <HeroSliderControls
-                total={totalSlides}
-                currentIndex={currentIndex}
-                onPrev={onManualPrev}
-                onNext={onManualNext}
-                onSelect={onManualSelect}
-              />
-            </div>
-          </div>
+          {/* Single Refined Pill CTA */}
+          <Link
+            href="#events"
+            className="px-7 py-2.5 sm:px-8 sm:py-3 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] bg-white/15 hover:bg-white/25 text-white border border-white/40 backdrop-blur-md transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg"
+          >
+            EXPLORE OUR EVENTS
+          </Link>
         </div>
 
-        {/* Mobile / Tablet: Social Icons & Slider Controls */}
-        <div className="flex lg:hidden flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/10 mt-6">
-          {/* Mobile Social Links (Outline Style) */}
-          <div className="flex items-center space-x-6">
-            <a
-              href={`https://wa.me/${siteConfig.contact.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Chat on WhatsApp"
-              className="text-white/85 hover:text-white active:scale-95 transition-all drop-shadow-sm"
-            >
-              <WhatsAppIcon className="w-6 h-6" />
-            </a>
-            <a
-              href={siteConfig.social.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Follow on Instagram"
-              className="text-white/85 hover:text-white active:scale-95 transition-all drop-shadow-sm"
-            >
-              <InstagramIcon className="w-6 h-6" />
-            </a>
-            <a
-              href={siteConfig.social.location}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Find our Location"
-              className="text-white/85 hover:text-white active:scale-95 transition-all drop-shadow-sm"
-            >
-              <LocationPinIcon className="w-6 h-6" />
-            </a>
-          </div>
+        {/* Subtle, Low-visual-weight Left & Right Slider Arrows */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 sm:left-7 top-[48%] -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/20 hover:bg-black/45 border border-white/20 text-white/85 hover:text-white flex items-center justify-center transition-all duration-200 backdrop-blur-xs cursor-pointer"
+          aria-label="Previous Slide"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
 
-          {/* Mobile Slider Indicator */}
-          <HeroSliderControls
-            total={totalSlides}
-            currentIndex={currentIndex}
-            onPrev={onManualPrev}
-            onNext={onManualNext}
-            onSelect={onManualSelect}
-          />
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 sm:right-7 top-[48%] -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/20 hover:bg-black/45 border border-white/20 text-white/85 hover:text-white flex items-center justify-center transition-all duration-200 backdrop-blur-xs cursor-pointer"
+          aria-label="Next Slide"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+
+        {/* Subtle Bottom Slide Indicator Dots */}
+        <div className="relative z-10 pb-24 sm:pb-28 flex justify-center space-x-2">
+          {HERO_SLIDES.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentSlide(idx)}
+              className={`h-1 rounded-full transition-all duration-300 ${
+                idx === currentSlide ? "w-6 bg-white" : "w-2 bg-white/35 hover:bg-white/60"
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
         </div>
       </div>
     </section>
   );
 }
-
