@@ -15,13 +15,13 @@ export default function Footer() {
           {/* Column 1: Brand Identity */}
           <div className="space-y-4 lg:col-span-2">
             <Link href="/" className="inline-block group">
-              <div className="relative w-48 sm:w-56 h-12 sm:h-14 bg-white/95 px-3 py-1.5 rounded-2xl shadow-lg group-hover:scale-103 transition-transform flex items-center justify-center">
+              <div className="relative w-40 sm:w-48 h-16 sm:h-20 group-hover:scale-103 transition-transform flex items-center">
                 <Image
-                  src="/logo/green apple full logo.png"
+                  src="/logo/green apple logo vertical.png"
                   alt="Green Apple Catering & Event Company"
                   fill
-                  className="object-contain p-1"
-                  sizes="220px"
+                  className="object-contain"
+                  sizes="192px"
                 />
               </div>
             </Link>

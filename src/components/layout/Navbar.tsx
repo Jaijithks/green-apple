@@ -58,13 +58,13 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <Link href="/" className="flex items-center group">
-            <div className="relative w-36 sm:w-44 h-10 sm:h-11 bg-white/95 px-2.5 py-1 rounded-xl shadow-md group-hover:scale-103 transition-transform flex items-center justify-center">
+            <div className="relative w-32 sm:w-36 h-11 sm:h-12 group-hover:scale-103 transition-transform flex items-center justify-center">
               <Image
-                src="/logo/green apple full logo.png"
+                src="/logo/green apple logo vertical.png"
                 alt="Green Apple Catering & Event Company"
                 fill
-                className="object-contain p-1"
-                sizes="(max-width: 640px) 150px, 180px"
+                className="object-contain"
+                sizes="(max-width: 640px) 130px, 150px"
               />
             </div>
           </Link>
@@ -138,20 +138,20 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
             ))}
           </div>
 
-          {/* ZONE 2: Centered Full Brand Logo Image from public/logo/green apple full logo.png */}
+          {/* ZONE 2: Centered Vertical Brand Logo Image (Transparent / Background-less) */}
           <div className="flex items-center justify-start lg:justify-center lg:col-span-4">
             <Link
               href="/"
               className="group cursor-pointer flex items-center justify-center"
             >
-              <div className="relative w-44 sm:w-52 md:w-56 h-12 sm:h-14 bg-white/95 px-3 py-1.5 rounded-2xl shadow-xl backdrop-blur-md border border-white/40 group-hover:scale-104 transition-transform duration-300 flex items-center justify-center">
+              <div className="relative w-36 sm:w-44 md:w-48 h-16 sm:h-20 group-hover:scale-104 transition-transform duration-300 flex items-center justify-center">
                 <Image
-                  src="/logo/green apple full logo.png"
+                  src="/logo/green apple logo vertical.png"
                   alt="Green Apple Catering & Event Company"
                   fill
                   priority
-                  className="object-contain p-1"
-                  sizes="(max-width: 640px) 180px, 230px"
+                  className="object-contain drop-shadow-[0_4px_14px_rgba(0,0,0,0.5)]"
+                  sizes="(max-width: 640px) 150px, 192px"
                 />
               </div>
             </Link>
@@ -216,13 +216,13 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 bg-[#072018]/95 backdrop-blur-xl flex flex-col p-6 text-white animate-in fade-in duration-200 lg:hidden">
           <div className="flex items-center justify-between pb-6 border-b border-white/10">
-            <div className="relative w-44 h-11 bg-white/95 px-2.5 py-1 rounded-xl shadow-md">
+            <div className="relative w-36 h-14">
               <Image
-                src="/logo/green apple full logo.png"
+                src="/logo/green apple logo vertical.png"
                 alt="Green Apple Catering & Event Company"
                 fill
-                className="object-contain p-0.5"
-                sizes="180px"
+                className="object-contain"
+                sizes="150px"
               />
             </div>
             <button

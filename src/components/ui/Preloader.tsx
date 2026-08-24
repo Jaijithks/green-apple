@@ -37,14 +37,14 @@ export default function Preloader() {
       <div className="absolute w-[450px] h-[450px] rounded-full bg-emerald-600/15 blur-3xl pointer-events-none animate-pulse" />
 
       <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-md">
-        {/* Full Green Apple Logo Image from public/logo/green apple full logo.png */}
-        <div className="relative w-64 sm:w-80 h-20 sm:h-24 mb-6 p-2 rounded-2xl bg-white/95 shadow-2xl backdrop-blur-md animate-bounce-gentle">
+        {/* Vertical Green Apple Logo Image (Transparent / Background-less) */}
+        <div className="relative w-48 sm:w-56 h-36 sm:h-44 mb-6 animate-bounce-gentle">
           <Image
-            src="/logo/green apple full logo.png"
+            src="/logo/green apple logo vertical.png"
             alt="Green Apple Catering & Event Company"
             fill
             priority
-            className="object-contain p-1"
+            className="object-contain drop-shadow-[0_10px_25px_rgba(0,0,0,0.5)]"
           />
         </div>
 

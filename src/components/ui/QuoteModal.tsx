@@ -59,13 +59,13 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
 
         {/* Modal Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10">
-          <div className="relative w-44 h-11 bg-white/95 px-2.5 py-1 rounded-xl shadow-md flex items-center justify-center">
+          <div className="relative w-36 h-14 flex items-center">
             <Image
-              src="/logo/green apple full logo.png"
+              src="/logo/green apple logo vertical.png"
               alt="Green Apple Catering & Event Company"
               fill
-              className="object-contain p-0.5"
-              sizes="180px"
+              className="object-contain"
+              sizes="150px"
             />
           </div>
           <div className="text-left sm:text-right">
