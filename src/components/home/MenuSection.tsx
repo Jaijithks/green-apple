@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { siteConfig } from "@/data/site";
 import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 
 interface MenuSectionProps {
@@ -159,7 +160,7 @@ export default function MenuSection({ onOpenQuote }: MenuSectionProps) {
                 </button>
 
                 <a
-                  href="https://wa.me/919946061122?text=Hello%20Green%20Apple%20Catering,%20I%20would%20like%20to%20know%20more%20about%20your%20menus."
+                  href={`https://wa.me/${siteConfig.contact.whatsapp}?text=Hello%20Green%20Apple%20Catering,%20I%20would%20like%20to%20know%20more%20about%20your%20menus.`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all text-center"

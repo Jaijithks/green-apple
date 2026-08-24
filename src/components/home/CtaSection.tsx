@@ -69,11 +69,11 @@ export default function CtaSection({ onOpenQuote }: CtaSectionProps) {
         {/* Direct Call Quick Link */}
         <div className="pt-2">
           <a
-            href={`tel:${siteConfig.contact.phonePrimary}`}
+            href="tel:8086088913"
             className="inline-flex items-center text-xs text-gray-300 hover:text-emerald-300 transition-colors font-light tracking-wider"
           >
             <Phone className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
-            <span>Direct Call: {siteConfig.contact.phonePrimary} / {siteConfig.contact.phoneSecondary}</span>
+            <span>Direct Call: +91 8086088913</span>
           </a>
         </div>
       </div>

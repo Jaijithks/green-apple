@@ -2,9 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { siteConfig } from "@/data/site";
 import { Phone, MapPin, ShieldCheck, ArrowRight } from "lucide-react";
-import { GreenAppleLogoIcon, WhatsAppSolidIcon, InstagramIcon } from "@/components/ui/Icons";
+import { WhatsAppSolidIcon, InstagramIcon } from "@/components/ui/Icons";
 
 export default function Footer() {
   return (
@@ -13,15 +14,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-emerald-900/60">
           {/* Column 1: Brand Identity */}
           <div className="space-y-4 lg:col-span-2">
-            <Link href="/" className="flex items-center space-x-3 group">
-              <GreenAppleLogoIcon className="w-10 h-10 group-hover:scale-105 transition-transform" />
-              <div className="flex flex-col">
-                <span className="font-serif text-2xl font-bold tracking-tight text-white leading-none">
-                  Green Apple
-                </span>
-                <span className="text-[9px] tracking-widest uppercase text-emerald-400 font-semibold mt-1">
-                  Catering & Event Company
-                </span>
+            <Link href="/" className="inline-block group">
+              <div className="relative w-48 sm:w-56 h-12 sm:h-14 bg-white/95 px-3 py-1.5 rounded-2xl shadow-lg group-hover:scale-103 transition-transform flex items-center justify-center">
+                <Image
+                  src="/logo/green apple full logo.png"
+                  alt="Green Apple Catering & Event Company"
+                  fill
+                  className="object-contain p-1"
+                  sizes="220px"
+                />
               </div>
             </Link>
 
@@ -156,12 +157,10 @@ export default function Footer() {
 
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <a href="tel:9946061122" className="hover:text-emerald-300 transition-colors">
-                  +91 9946061122
-                </a>
-                <span>/</span>
+
+
                 <a href="tel:8086088913" className="hover:text-emerald-300 transition-colors">
-                  8086088913
+                  +91 8086088913
                 </a>
               </div>
 

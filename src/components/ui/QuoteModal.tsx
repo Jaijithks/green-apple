@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { X, Send, Calendar, Users, Phone, User, MessageSquare } from "lucide-react";
 import { siteConfig } from "@/data/site";
-import { GreenAppleLogoIcon, WhatsAppSolidIcon } from "@/components/ui/Icons";
+import { WhatsAppSolidIcon } from "@/components/ui/Icons";
 
 interface QuoteModalProps {
   isOpen: boolean;
@@ -57,15 +58,23 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
         </button>
 
         {/* Modal Header */}
-        <div className="flex items-center space-x-3 mb-6">
-          <GreenAppleLogoIcon className="w-9 h-9 flex-shrink-0" />
-          <div>
-            <h3 className="font-serif text-2xl font-normal text-white">
-              Request a Custom Quote
-            </h3>
-            <p className="text-xs text-emerald-400 font-light">
-              Green Apple Catering & Event Company, Kothamangalam
-            </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10">
+          <div className="relative w-44 h-11 bg-white/95 px-2.5 py-1 rounded-xl shadow-md flex items-center justify-center">
+            <Image
+              src="/logo/green apple full logo.png"
+              alt="Green Apple Catering & Event Company"
+              fill
+              className="object-contain p-0.5"
+              sizes="180px"
+            />
+          </div>
+          <div className="text-left sm:text-right">
+            <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-medium block">
+              Direct Inquiry
+            </span>
+            <span className="text-xs text-gray-300 font-light">
+              Kothamangalam, Kerala
+            </span>
           </div>
         </div>
 

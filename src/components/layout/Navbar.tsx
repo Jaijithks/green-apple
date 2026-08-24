@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { siteConfig } from "@/data/site";
-import { Menu as MenuIcon, X, ArrowRight } from "lucide-react";
-import { GreenAppleLogoIcon, WhatsAppSolidIcon } from "@/components/ui/Icons";
+import { Menu as MenuIcon, X } from "lucide-react";
+import { WhatsAppSolidIcon } from "@/components/ui/Icons";
 
 interface NavbarProps {
   onOpenQuote?: () => void;
@@ -51,20 +52,20 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
           isScrolled
-            ? "translate-y-0 bg-[#072018]/95 backdrop-blur-md border-b border-white/10 shadow-2xl py-3"
-            : "-translate-y-full py-3 pointer-events-none"
+            ? "translate-y-0 bg-[#072018]/95 backdrop-blur-md border-b border-white/10 shadow-2xl py-2.5"
+            : "-translate-y-full py-2.5 pointer-events-none"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2.5 group">
-            <GreenAppleLogoIcon className="w-8 h-8 group-hover:scale-105 transition-transform" />
-            <div className="flex flex-col">
-              <span className="font-serif text-lg font-bold tracking-tight text-white leading-none">
-                Green Apple
-              </span>
-              <span className="text-[8px] tracking-widest uppercase text-emerald-400 font-semibold mt-0.5">
-                Catering & Events • Kothamangalam
-              </span>
+          <Link href="/" className="flex items-center group">
+            <div className="relative w-36 sm:w-44 h-10 sm:h-11 bg-white/95 px-2.5 py-1 rounded-xl shadow-md group-hover:scale-103 transition-transform flex items-center justify-center">
+              <Image
+                src="/logo/green apple full logo.png"
+                alt="Green Apple Catering & Event Company"
+                fill
+                className="object-contain p-1"
+                sizes="(max-width: 640px) 150px, 180px"
+              />
             </div>
           </Link>
 
@@ -122,41 +123,42 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
       </header>
 
       {/* Hero Integrated Navigation (Matches Pinterest Reference Editorial Composition) */}
-      <nav className="w-full relative z-20 pt-6 sm:pt-8 px-4 sm:px-8 max-w-6xl mx-auto">
+      <nav className="w-full relative z-20 pt-5 sm:pt-7 px-4 sm:px-8 max-w-6xl mx-auto">
         <div className="flex items-center justify-between lg:grid lg:grid-cols-12 lg:items-center">
           {/* ZONE 1: Left Nav (Desktop) */}
-          <div className="hidden lg:flex items-center justify-end space-x-6 xl:space-x-7 lg:col-span-5">
+          <div className="hidden lg:flex items-center justify-end space-x-6 xl:space-x-7 lg:col-span-4">
             {leftNav.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.2em] uppercase text-white/85 hover:text-white transition-colors duration-200 drop-shadow-sm"
+                className="text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors duration-200 drop-shadow-md"
               >
                 {item.label}
               </Link>
             ))}
           </div>
 
-          {/* ZONE 2: Centered Logo */}
-          <div className="flex items-center justify-start lg:justify-center lg:col-span-2">
+          {/* ZONE 2: Centered Full Brand Logo Image from public/logo/green apple full logo.png */}
+          <div className="flex items-center justify-start lg:justify-center lg:col-span-4">
             <Link
               href="/"
-              className="flex flex-col items-center text-center group cursor-pointer"
+              className="group cursor-pointer flex items-center justify-center"
             >
-              <div className="flex items-center space-x-1.5">
-                <GreenAppleLogoIcon className="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-md group-hover:scale-105 transition-transform duration-300" />
-                <span className="font-serif text-2xl sm:text-[26px] text-white font-normal tracking-wide drop-shadow-md leading-none">
-                  Green Apple
-                </span>
+              <div className="relative w-44 sm:w-52 md:w-56 h-12 sm:h-14 bg-white/95 px-3 py-1.5 rounded-2xl shadow-xl backdrop-blur-md border border-white/40 group-hover:scale-104 transition-transform duration-300 flex items-center justify-center">
+                <Image
+                  src="/logo/green apple full logo.png"
+                  alt="Green Apple Catering & Event Company"
+                  fill
+                  priority
+                  className="object-contain p-1"
+                  sizes="(max-width: 640px) 180px, 230px"
+                />
               </div>
-              <span className="text-[7.5px] sm:text-[8px] tracking-[0.28em] uppercase text-emerald-300/85 font-light mt-0.5 drop-shadow-sm">
-                CATERING & EVENTS
-              </span>
             </Link>
           </div>
 
           {/* ZONE 3: Right Nav (Desktop) */}
-          <div className="hidden lg:flex items-center justify-start space-x-5 xl:space-x-6 lg:col-span-5 pl-4">
+          <div className="hidden lg:flex items-center justify-start space-x-5 xl:space-x-6 lg:col-span-4 pl-4">
             {rightNav.map((item) => (
               item.external ? (
                 <a
@@ -164,7 +166,7 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
                   href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.2em] uppercase text-white/85 hover:text-white transition-colors duration-200 drop-shadow-sm"
+                  className="text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors duration-200 drop-shadow-md"
                 >
                   {item.label}
                 </a>
@@ -172,7 +174,7 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.2em] uppercase text-white/85 hover:text-white transition-colors duration-200 drop-shadow-sm"
+                  className="text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors duration-200 drop-shadow-md"
                 >
                   {item.label}
                 </Link>
@@ -181,7 +183,7 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
 
             <button
               onClick={onOpenQuote}
-              className="px-3.5 py-1 rounded-full text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-[0.15em] bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-xs transition-all duration-200 shadow-xs cursor-pointer"
+              className="px-3.5 py-1.5 rounded-full text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-[0.15em] bg-white/20 hover:bg-white/30 text-white border border-white/40 backdrop-blur-xs transition-all duration-200 shadow-md cursor-pointer"
             >
               Get a Quote
             </button>
@@ -214,16 +216,14 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 bg-[#072018]/95 backdrop-blur-xl flex flex-col p-6 text-white animate-in fade-in duration-200 lg:hidden">
           <div className="flex items-center justify-between pb-6 border-b border-white/10">
-            <div className="flex items-center space-x-2.5">
-              <GreenAppleLogoIcon className="w-8 h-8" />
-              <div className="flex flex-col">
-                <span className="font-serif text-xl font-bold tracking-wide text-white">
-                  Green Apple
-                </span>
-                <span className="text-[8px] tracking-widest uppercase text-emerald-400">
-                  Catering & Events • Kothamangalam
-                </span>
-              </div>
+            <div className="relative w-44 h-11 bg-white/95 px-2.5 py-1 rounded-xl shadow-md">
+              <Image
+                src="/logo/green apple full logo.png"
+                alt="Green Apple Catering & Event Company"
+                fill
+                className="object-contain p-0.5"
+                sizes="180px"
+              />
             </div>
             <button
               onClick={() => setIsMobileMenuOpen(false)}
@@ -269,7 +269,6 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
               className="w-full py-3 rounded-full text-sm font-semibold uppercase tracking-wider bg-[#229938] text-white hover:bg-[#1c822e] transition-colors flex items-center justify-center shadow-lg cursor-pointer"
             >
               <span>Get a Custom Quote</span>
-              <ArrowRight className="w-4 h-4 ml-2" />
             </button>
 
             <a

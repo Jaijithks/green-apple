@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Preloader from "@/components/ui/Preloader";
 import HeroSection from "@/components/home/HeroSection";
 import WelcomeSection from "@/components/home/WelcomeSection";
 import ServicesSection from "@/components/home/ServicesSection";
@@ -17,7 +18,10 @@ export default function Home() {
   const handleCloseQuote = () => setIsQuoteModalOpen(false);
 
   return (
-    <div className="min-h-screen bg-[#FBF9F5] flex flex-col selection:bg-[#229938] selection:text-white">
+    <div className="min-h-screen bg-[#F7F5EF] flex flex-col selection:bg-[#229938] selection:text-white">
+      {/* Editorial Luxury Brand Preloader */}
+      <Preloader />
+
       {/* 1. Hero Section (Overlaid Nav + Photographic Scene + Script Accent) */}
       <HeroSection onOpenQuote={handleOpenQuote} />
 
@@ -44,3 +48,4 @@ export default function Home() {
     </div>
   );
 }
+

@@ -40,10 +40,10 @@ export const siteConfig: SiteConfig = {
   contact: {
     address: "Near Govt Hospital, Kothamangalam",
     city: "Ernakulam, Kerala",
-    phonePrimary: "9946061122",
+    phonePrimary: "8086088913",
     phoneSecondary: "8086088913",
     fssai: "21322192000446",
-    whatsapp: "919946061122",
+    whatsapp: "918086088913",
   },
   social: {
     instagram: "https://www.instagram.com/_green_apple_catering_/?hl=en",
