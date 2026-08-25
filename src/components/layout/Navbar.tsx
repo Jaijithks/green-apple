@@ -123,10 +123,11 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
       </header>
 
       {/* Hero Integrated Navigation (Matches Pinterest Reference Editorial Composition) */}
-      <nav className="w-full relative z-20 pt-5 sm:pt-7 px-4 sm:px-8 max-w-6xl mx-auto">
-        <div className="flex items-center justify-between lg:grid lg:grid-cols-12 lg:items-center">
+      <nav className="w-full relative z-20 pt-5 sm:pt-6 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        {/* Desktop Layout (lg and above) */}
+        <div className="hidden lg:grid lg:grid-cols-12 lg:items-center">
           {/* ZONE 1: Left Nav (Desktop) */}
-          <div className="hidden lg:flex items-center justify-end space-x-6 xl:space-x-7 lg:col-span-4">
+          <div className="flex items-center justify-end space-x-6 xl:space-x-7 lg:col-span-4">
             {leftNav.map((item) => (
               <Link
                 key={item.label}
@@ -138,27 +139,27 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
             ))}
           </div>
 
-          {/* ZONE 2: Centered Vertical Brand Logo Image (Transparent / Background-less) */}
-          <div className="flex items-center justify-start lg:justify-center lg:col-span-4">
+          {/* ZONE 2: Centered Vertical Brand Logo Image */}
+          <div className="flex items-center justify-center lg:col-span-4">
             <Link
               href="/"
               className="group cursor-pointer flex items-center justify-center"
             >
-              <div className="relative w-36 sm:w-44 md:w-48 h-16 sm:h-20 group-hover:scale-104 transition-transform duration-300 flex items-center justify-center">
+              <div className="relative w-40 sm:w-44 md:w-48 h-16 sm:h-20 group-hover:scale-104 transition-transform duration-300 flex items-center justify-center">
                 <Image
                   src="/logo/green apple logo vertical.png"
                   alt="Green Apple Catering & Event Company"
                   fill
                   priority
                   className="object-contain drop-shadow-[0_4px_14px_rgba(0,0,0,0.5)]"
-                  sizes="(max-width: 640px) 150px, 192px"
+                  sizes="192px"
                 />
               </div>
             </Link>
           </div>
 
           {/* ZONE 3: Right Nav (Desktop) */}
-          <div className="hidden lg:flex items-center justify-start space-x-5 xl:space-x-6 lg:col-span-4 pl-4">
+          <div className="flex items-center justify-start space-x-5 xl:space-x-6 lg:col-span-4 pl-4">
             {rightNav.map((item) => (
               item.external ? (
                 <a
@@ -188,27 +189,45 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
               Get a Quote
             </button>
           </div>
+        </div>
 
-          {/* Mobile Right Action Area */}
-          <div className="flex lg:hidden items-center space-x-2">
-            <a
-              href={`https://wa.me/${siteConfig.contact.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="WhatsApp"
-              className="w-8 h-8 rounded-full bg-emerald-600/90 text-white flex items-center justify-center shadow-md active:scale-95 transition-transform"
-            >
-              <WhatsAppSolidIcon className="w-4 h-4 fill-current" />
-            </a>
+        {/* Mobile Layout (< lg): [ ☰ (Left) | GREEN APPLE LOGO (Absolute Center) | GET A QUOTE (Right) ] */}
+        <div className="relative flex lg:hidden items-center justify-between w-full h-12 sm:h-14">
+          {/* LEFT: Hamburger Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="w-10 h-10 flex items-center justify-start text-white/95 hover:text-white transition-all focus:outline-none cursor-pointer z-10 active:scale-95"
+            aria-label="Open navigation menu"
+          >
+            <MenuIcon className="w-6 h-6 stroke-[2]" />
+          </button>
 
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-1.5 rounded-lg text-white/90 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
-              aria-label="Open mobile menu"
+          {/* CENTER: Strictly Centered Relative to Viewport */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-auto">
+            <Link
+              href="/"
+              className="flex items-center justify-center group"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
-            </button>
+              <div className="relative w-28 sm:w-36 h-12 sm:h-14 transition-transform group-hover:scale-102 flex items-center justify-center">
+                <Image
+                  src="/logo/green apple logo vertical.png"
+                  alt="Green Apple Catering & Event Company"
+                  fill
+                  priority
+                  className="object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]"
+                  sizes="(max-width: 640px) 120px, 150px"
+                />
+              </div>
+            </Link>
           </div>
+
+          {/* RIGHT: Compact GET A QUOTE Button */}
+          <button
+            onClick={onOpenQuote}
+            className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.14em] text-white bg-white/10 hover:bg-white/20 border border-white/45 backdrop-blur-sm transition-all active:scale-95 shadow-sm cursor-pointer whitespace-nowrap z-10"
+          >
+            GET A QUOTE
+          </button>
         </div>
       </nav>
 
