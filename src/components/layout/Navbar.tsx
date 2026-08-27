@@ -4,11 +4,12 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/data/site";
-import { Menu as MenuIcon, X } from "lucide-react";
+import { Menu as MenuIcon, X, Utensils } from "lucide-react";
 import { WhatsAppSolidIcon } from "@/components/ui/Icons";
 
 interface NavbarProps {
   onOpenQuote?: () => void;
+  onOpenMenuBuilder?: () => void;
 }
 
 interface NavLinkItem {
@@ -17,7 +18,7 @@ interface NavLinkItem {
   external?: boolean;
 }
 
-export default function Navbar({ onOpenQuote }: NavbarProps) {
+export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -41,8 +42,7 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
   ];
 
   const rightNav: NavLinkItem[] = [
-    { label: "OUR EVENTS", href: "#events" },
-    { label: "GALLERY", href: "https://www.instagram.com/_green_apple_catering_/?hl=en", external: true },
+    { label: "GALLERY", href: "#gallery" },
     { label: "CONTACT", href: "#contact" },
   ];
 
@@ -93,20 +93,18 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
             ))}
           </nav>
 
-          <div className="flex items-center space-x-3">
-            <a
-              href={`https://wa.me/${siteConfig.contact.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-medium bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-800 transition-all"
+          <div className="flex items-center space-x-2.5 sm:space-x-3">
+            <button
+              onClick={onOpenMenuBuilder}
+              className="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <WhatsAppSolidIcon className="w-3.5 h-3.5 mr-1.5" />
-              <span>WhatsApp</span>
-            </a>
+              <Utensils className="w-3.5 h-3.5 mr-1.5" />
+              <span>Build Menu</span>
+            </button>
 
             <button
               onClick={onOpenQuote}
-              className="px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-md transition-all hover:scale-102 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white border border-white/20 shadow-md transition-all hover:scale-102 cursor-pointer"
             >
               Get a Quote
             </button>
@@ -122,7 +120,7 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
         </div>
       </header>
 
-      {/* Hero Integrated Navigation (Matches Pinterest Reference Editorial Composition) */}
+      {/* Hero Integrated Navigation (Editorial Centered Composition) */}
       <nav className="w-full relative z-20 pt-5 sm:pt-6 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         {/* Desktop Layout (lg and above) */}
         <div className="hidden lg:grid lg:grid-cols-12 lg:items-center">
@@ -159,7 +157,7 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
           </div>
 
           {/* ZONE 3: Right Nav (Desktop) */}
-          <div className="flex items-center justify-start space-x-5 xl:space-x-6 lg:col-span-4 pl-4">
+          <div className="flex items-center justify-start space-x-4 xl:space-x-5 lg:col-span-4 pl-4">
             {rightNav.map((item) => (
               item.external ? (
                 <a
@@ -183,8 +181,15 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
             ))}
 
             <button
+              onClick={onOpenMenuBuilder}
+              className="px-3.5 py-1.5 rounded-full text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-[0.14em] bg-[#229938] hover:bg-[#1c822e] text-white transition-all duration-200 shadow-md cursor-pointer whitespace-nowrap"
+            >
+              Build Menu
+            </button>
+
+            <button
               onClick={onOpenQuote}
-              className="px-3.5 py-1.5 rounded-full text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-[0.15em] bg-white/20 hover:bg-white/30 text-white border border-white/40 backdrop-blur-xs transition-all duration-200 shadow-md cursor-pointer"
+              className="px-3.5 py-1.5 rounded-full text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-[0.14em] bg-white/20 hover:bg-white/30 text-white border border-white/40 backdrop-blur-xs transition-all duration-200 shadow-md cursor-pointer whitespace-nowrap"
             >
               Get a Quote
             </button>
@@ -221,13 +226,15 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
             </Link>
           </div>
 
-          {/* RIGHT: Compact GET A QUOTE Button */}
-          <button
-            onClick={onOpenQuote}
-            className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.14em] text-white bg-white/10 hover:bg-white/20 border border-white/45 backdrop-blur-sm transition-all active:scale-95 shadow-sm cursor-pointer whitespace-nowrap z-10"
-          >
-            GET A QUOTE
-          </button>
+          {/* RIGHT: Compact Action Buttons */}
+          <div className="flex items-center space-x-1.5 z-10">
+            <button
+              onClick={onOpenMenuBuilder}
+              className="px-3 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-[0.12em] text-white bg-[#229938] hover:bg-[#1c822e] transition-all active:scale-95 shadow-sm cursor-pointer whitespace-nowrap"
+            >
+              BUILD MENU
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -283,18 +290,29 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
             <button
               onClick={() => {
                 setIsMobileMenuOpen(false);
+                if (onOpenMenuBuilder) onOpenMenuBuilder();
+              }}
+              className="w-full py-3 rounded-full text-sm font-semibold uppercase tracking-wider bg-[#229938] text-white hover:bg-[#1c822e] transition-colors flex items-center justify-center space-x-2 shadow-lg cursor-pointer"
+            >
+              <Utensils className="w-4 h-4 mr-1" />
+              <span>Build Custom Menu</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
                 if (onOpenQuote) onOpenQuote();
               }}
-              className="w-full py-3 rounded-full text-sm font-semibold uppercase tracking-wider bg-[#229938] text-white hover:bg-[#1c822e] transition-colors flex items-center justify-center shadow-lg cursor-pointer"
+              className="w-full py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors flex items-center justify-center cursor-pointer"
             >
-              <span>Get a Custom Quote</span>
+              <span>Get a Quote</span>
             </button>
 
             <a
               href={`https://wa.me/${siteConfig.contact.whatsapp}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2.5 rounded-full text-xs font-semibold bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center justify-center border border-white/15"
+              className="w-full py-2.5 rounded-full text-xs font-semibold bg-white/5 text-gray-300 hover:text-white hover:bg-white/10 transition-colors flex items-center justify-center border border-white/10"
             >
               <WhatsAppSolidIcon className="w-4 h-4 mr-2 text-emerald-400" />
               <span>WhatsApp: {siteConfig.contact.phonePrimary}</span>
@@ -305,3 +323,4 @@ export default function Navbar({ onOpenQuote }: NavbarProps) {
     </>
   );
 }
+

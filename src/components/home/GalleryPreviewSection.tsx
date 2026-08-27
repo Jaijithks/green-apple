@@ -240,7 +240,7 @@ export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewPro
   }, [activeLightboxIndex, nextItem, prevItem]);
 
   return (
-    <section id="gallery" className="py-16 sm:py-24 lg:py-28 bg-[#F7F5EF] text-gray-900 overflow-hidden">
+    <section id="gallery" className="py-16 sm:py-24 lg:py-28 bg-[#F7F5EF] text-gray-900 overflow-hidden scroll-mt-16 sm:scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-10 sm:mb-14">

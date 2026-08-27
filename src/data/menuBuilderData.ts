@@ -50,6 +50,7 @@ export interface EventDetails {
   fullName: string;
   phone: string;
   eventType: string;
+  customEventType?: string;
   eventDate: string;
   guestCount: string;
   location: string;

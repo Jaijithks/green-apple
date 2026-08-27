@@ -42,7 +42,7 @@ export default function Home() {
       <Preloader />
 
       {/* 1. Hero Section (Overlaid Nav + Photographic Scene + Script Accent) */}
-      <HeroSection onOpenQuote={handleOpenQuote} />
+      <HeroSection onOpenQuote={handleOpenQuote} onOpenMenuBuilder={handleOpenMenuBuilder} />
 
       {/* 2. Hero -> About Overlap (Centered White Editorial Card) */}
       <WelcomeSection />

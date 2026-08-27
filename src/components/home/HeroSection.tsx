@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface HeroSectionProps {
   onOpenQuote?: () => void;
+  onOpenMenuBuilder?: () => void;
 }
 
 const HERO_SLIDES = [
@@ -37,7 +38,7 @@ const HERO_SLIDES = [
   },
 ];
 
-export default function HeroSection({ onOpenQuote }: HeroSectionProps) {
+export default function HeroSection({ onOpenQuote, onOpenMenuBuilder }: HeroSectionProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -97,7 +98,7 @@ export default function HeroSection({ onOpenQuote }: HeroSectionProps) {
         ))}
 
         {/* Top Editorial Overlaid Navbar */}
-        <Navbar onOpenQuote={onOpenQuote} />
+        <Navbar onOpenQuote={onOpenQuote} onOpenMenuBuilder={onOpenMenuBuilder} />
 
         {/* Optically Centered Hero Headline Content */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-4xl mx-auto my-auto py-2">
@@ -121,12 +122,12 @@ export default function HeroSection({ onOpenQuote }: HeroSectionProps) {
           </p>
 
           {/* Single Refined Pill CTA */}
-          <Link
-            href="#events"
-            className="w-[215px] sm:w-[235px] py-3 sm:py-3.5 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] bg-white/10 hover:bg-white/20 text-white border border-white/40 backdrop-blur-md transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg mt-6 sm:mt-7 flex items-center justify-center"
+          <button
+            onClick={onOpenMenuBuilder}
+            className="w-[215px] sm:w-[235px] py-3 sm:py-3.5 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] bg-[#229938] hover:bg-[#1c822e] text-white shadow-xl shadow-emerald-950/70 transition-all duration-300 transform hover:scale-105 active:scale-95 mt-6 sm:mt-7 flex items-center justify-center cursor-pointer"
           >
-            EXPLORE OUR EVENTS
-          </Link>
+            BUILD YOUR MENU
+          </button>
         </div>
 
         {/* Left & Right Circular Slider Controls */}

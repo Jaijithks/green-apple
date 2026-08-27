@@ -16,6 +16,7 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
     name: "",
     phone: "",
     eventType: "Wedding Reception",
+    customEventType: "",
     guests: "250-500",
     eventDate: "",
     notes: "",
@@ -27,11 +28,16 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const effectiveEventType =
+      formData.eventType === "Other"
+        ? formData.customEventType.trim() || "Other Occasion"
+        : formData.eventType;
+
     // Build WhatsApp message
     const message = `*New Event Inquiry - Green Apple Catering*\n\n` +
       `*Name:* ${formData.name}\n` +
       `*Phone:* ${formData.phone}\n` +
-      `*Event Type:* ${formData.eventType}\n` +
+      `*Occasion Type:* ${effectiveEventType}\n` +
       `*Estimated Guests:* ${formData.guests}\n` +
       `*Event Date:* ${formData.eventDate || "To be decided"}\n` +
       `*Notes:* ${formData.notes || "None"}`;
@@ -132,16 +138,35 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
                 <select
                   value={formData.eventType}
                   onChange={(e) => setFormData({ ...formData, eventType: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#0E362A] border border-white/15 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#0E362A] border border-white/15 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-400 cursor-pointer"
                 >
                   <option value="Wedding Reception">Wedding Reception</option>
                   <option value="Traditional Sadhya">Traditional Sadhya</option>
                   <option value="Engagement Banquet">Engagement Banquet</option>
                   <option value="Corporate Event">Corporate Event</option>
                   <option value="Birthday & Social Gathering">Birthday & Social Gathering</option>
+                  <option value="Other">Other Occasion</option>
                 </select>
               </div>
             </div>
+
+            {/* Custom Occasion Name input when Other is selected */}
+            {formData.eventType === "Other" && (
+              <div className="animate-in fade-in slide-in-from-top-2 duration-200">
+                <label className="block text-xs uppercase tracking-wider text-emerald-400 font-medium mb-1">
+                  Specify Your Occasion <span className="text-emerald-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  placeholder="e.g. Housewarming, Anniversary, Baptism, Jubilee..."
+                  value={formData.customEventType}
+                  onChange={(e) => setFormData({ ...formData, customEventType: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-emerald-500/40 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-400 placeholder:text-gray-500"
+                />
+              </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
