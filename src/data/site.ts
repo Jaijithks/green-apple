@@ -38,8 +38,8 @@ export const siteConfig: SiteConfig = {
   welcomeText:
     "We provide delicious food for every occasion. From small gatherings to grand celebrations, we bring flavour to your moments.",
   contact: {
-    address: "Near Govt Hospital, Kothamangalam",
-    city: "Ernakulam, Kerala",
+    address: "Near Shobana English Medium Public School, Kothamangalam",
+    city: "Kerala 686691",
     phonePrimary: "8086088913",
     phoneSecondary: "8086088913",
     fssai: "21322192000446",

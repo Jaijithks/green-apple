@@ -78,34 +78,29 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#about" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#about" className="hover:text-emerald-400 transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="#services" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#services" className="hover:text-emerald-400 transition-colors">
                   Our Services
                 </Link>
               </li>
               <li>
-                <Link href="#menu" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#menu" className="hover:text-emerald-400 transition-colors">
                   Curated Menus
                 </Link>
               </li>
               <li>
-                <Link href="#events" className="hover:text-emerald-400 transition-colors">
-                  Our Events
+                <Link href="/#gallery" className="hover:text-emerald-400 transition-colors">
+                  Gallery
                 </Link>
               </li>
               <li>
-                <a
-                  href={siteConfig.social.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-emerald-400 transition-colors"
-                >
-                  Gallery (Instagram)
-                </a>
+                <Link href="/#testimonials" className="hover:text-emerald-400 transition-colors">
+                  Client Reviews
+                </Link>
               </li>
             </ul>
           </div>
@@ -113,68 +108,73 @@ export default function Footer() {
           {/* Column 3: Services */}
           <div className="space-y-4">
             <h4 className="font-serif text-sm font-bold tracking-wider text-emerald-400 uppercase">
-              Services
+              Our Services
             </h4>
             <ul className="space-y-2.5 text-xs text-gray-300">
               <li>
-                <Link href="#services" className="hover:text-emerald-400 transition-colors">
-                  Signature Catering
+                <Link href="/catering" className="hover:text-emerald-400 transition-colors font-medium text-emerald-300/90">
+                  Artisanal Catering →
                 </Link>
               </li>
               <li>
-                <Link href="#services" className="hover:text-emerald-400 transition-colors">
-                  Event Decoration & Styling
+                <Link href="/events" className="hover:text-emerald-400 transition-colors font-medium text-emerald-300/90">
+                  Events & Styling →
                 </Link>
               </li>
               <li>
-                <Link href="#services" className="hover:text-emerald-400 transition-colors">
-                  Wedding Banquets & Sadyas
+                <Link href="/catering" className="hover:text-emerald-400 transition-colors">
+                  Kerala Sadya Feasts
                 </Link>
               </li>
               <li>
-                <Link href="#services" className="hover:text-emerald-400 transition-colors">
-                  Corporate Events & Galas
+                <Link href="/catering" className="hover:text-emerald-400 transition-colors">
+                  Wedding Banquets
                 </Link>
               </li>
               <li>
-                <Link href="#menu" className="hover:text-emerald-400 transition-colors">
-                  Live Cooking Counters
+                <Link href="/#menu" className="hover:text-emerald-400 transition-colors">
+                  Custom Menu Builder
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 4: Contact & Verification */}
-          <div className="space-y-4">
+          {/* Column 4: Contact & Location */}
+          <div className="space-y-4 lg:col-span-1">
             <h4 className="font-serif text-sm font-bold tracking-wider text-emerald-400 uppercase">
               Contact & Location
             </h4>
             <div className="space-y-3 text-xs text-gray-300 font-light">
-              <div className="flex items-start space-x-2">
-                <MapPin className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <span>Near Govt Hospital, Kothamangalam, Ernakulam, Kerala</span>
-              </div>
+              <a
+                href={siteConfig.social.location}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start space-x-2 group hover:text-emerald-300 transition-colors"
+              >
+                <MapPin className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                <span>Near Shobana English Medium Public School, Kothamangalam, Kerala 686691</span>
+              </a>
 
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-
-
-                <a href="tel:8086088913" className="hover:text-emerald-300 transition-colors">
-                  +91 8086088913
+                <a href={`tel:${siteConfig.contact.phonePrimary}`} className="hover:text-emerald-300 transition-colors font-medium">
+                  +91 {siteConfig.contact.phonePrimary}
                 </a>
               </div>
 
-              <div className="flex items-center space-x-2 pt-1 text-[11px] text-emerald-300">
+              <div className="flex items-center space-x-2 pt-0.5 text-[11px] text-emerald-300/90">
                 <ShieldCheck className="w-4 h-4 flex-shrink-0 text-emerald-400" />
                 <span>FSSAI Lic No: {siteConfig.contact.fssai}</span>
               </div>
 
               <div className="pt-2">
                 <a
-                  href={`https://wa.me/${siteConfig.contact.whatsapp}`}
+                  href={`https://wa.me/${siteConfig.contact.whatsapp}?text=${encodeURIComponent(
+                    "Hello Green Apple team, I would like to inquire about your catering and event services."
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-md transition-all"
+                  className="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-md transition-all hover:scale-102"
                 >
                   <WhatsAppSolidIcon className="w-3.5 h-3.5 mr-1.5" />
                   <span>WhatsApp Us</span>
