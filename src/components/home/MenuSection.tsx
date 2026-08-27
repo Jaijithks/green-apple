@@ -2,176 +2,228 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { siteConfig } from "@/data/site";
-import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import { SERVICE_STYLES } from "@/data/menuBuilderData";
 
 interface MenuSectionProps {
+  onOpenMenuBuilder?: () => void;
+  onOpenPresetMenus?: () => void;
   onOpenQuote?: () => void;
 }
 
-const MENU_CATEGORIES = [
-  {
-    id: "kerala-sadhya",
-    title: "Traditional Kerala Sadhya",
-    subtitle: "Authentic 24+ item feast served on fresh banana leaf",
-    image: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=800&q=80",
-    highlights: [
-      "Parippu & Pure Ghee with Crispy Pappadam",
-      "Avial, Thoran, Kalan, Olan & Pachadi",
-      "Authentic Sambar, Rasam & Moru Curry",
-      "Ada Pradhaman & Palada Payasam Duo",
-    ],
-  },
-  {
-    id: "wedding-feast",
-    title: "Royal Wedding Grand Buffet",
-    subtitle: "Lavish multi-cuisine spread with gourmet live counters",
-    image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80",
-    highlights: [
-      "Authentic Thalassery Mutton & Chicken Dum Biryani",
-      "Kerala Fish Molly & Karimeen Pollichathu",
-      "Appam, Idiyappam & Malabar Porotta Counter",
-      "Gourmet Dessert Lounge & Soufflé Bar",
-    ],
-  },
-  {
-    id: "live-counters",
-    title: "Live Action Cooking & Starters",
-    subtitle: "Interactive chef stations crafted fresh before your guests",
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
-    highlights: [
-      "Live Tandoor & Barbeque Skewers",
-      "Dosa & Appam Station with Custom Toppings",
-      "Artisanal Pasta & Risotto Live Counter",
-      "Signature Mocktail Bar with Tender Coconut Blends",
-    ],
-  },
-  {
-    id: "continental",
-    title: "Continental & Fusion Celebrations",
-    subtitle: "Contemporary delicacies for chic receptions & cocktail galas",
-    image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80",
-    highlights: [
-      "Smoked Herb Chicken & Fish Fillet with Lemon Butter",
-      "Mediterranean Mezze Platter with Hummus & Pita",
-      "Gourmet Finger Sandwiches & Savory Canapés",
-      "Belgian Chocolate Fondue & Pastry Bites",
-    ],
-  },
-];
+export default function MenuSection({
+  onOpenMenuBuilder,
+  onOpenPresetMenus,
+}: MenuSectionProps) {
+  const [activeMobileIndex, setActiveMobileIndex] = useState(0);
 
-export default function MenuSection({ onOpenQuote }: MenuSectionProps) {
-  const [activeTab, setActiveTab] = useState(0);
-  const selected = MENU_CATEGORIES[activeTab];
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActiveMobileIndex((prev) => (prev === 0 ? SERVICE_STYLES.length - 1 : prev - 1));
+  };
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActiveMobileIndex((prev) => (prev === SERVICE_STYLES.length - 1 ? 0 : prev + 1));
+  };
+
+  const activeStyle = SERVICE_STYLES[activeMobileIndex];
 
   return (
-    <section id="menu" className="py-20 sm:py-28 bg-[#09281E] text-white relative overflow-hidden bg-dark-pattern">
+    <section
+      id="menu"
+      className="py-12 sm:py-20 lg:py-24 bg-[#09281E] text-white relative overflow-hidden bg-dark-pattern scroll-mt-16 sm:scroll-mt-20"
+    >
+      {/* Background ambient lighting */}
+      <div className="absolute inset-0 bg-radial from-transparent via-[#09281E]/60 to-[#09281E] pointer-events-none" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 space-y-2.5 sm:space-y-3">
           <div className="inline-flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs tracking-[0.25em] uppercase text-emerald-400 font-semibold">
+            <span className="w-4 sm:w-5 h-[1.5px] bg-[#229938]" />
+            <span className="text-[10px] sm:text-xs tracking-[0.28em] uppercase text-emerald-400 font-semibold">
               OUR CULINARY REPERTOIRE
             </span>
+            <span className="w-4 sm:w-5 h-[1.5px] bg-[#229938]" />
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-white">
-            Curated Menus for Every Occasion
+          <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-normal text-white tracking-tight">
+            Build Your Perfect Menu
           </h2>
 
-          <p className="text-xs sm:text-sm text-gray-300 font-light max-w-xl mx-auto leading-relaxed">
-            Every recipe is prepared with locally sourced fresh produce, premium spices, and time-honored techniques.
+          <p className="text-xs sm:text-sm lg:text-[15px] text-gray-300 font-light max-w-xl mx-auto leading-relaxed px-2">
+            Create a catering experience around your event. Choose your service style, counters and dishes — we&apos;ll take care of the rest.
           </p>
+
+          <p className="font-serif italic text-emerald-300/90 text-xs sm:text-sm lg:text-base font-light">
+            Your event. Your choices. Your way.
+          </p>
+
+          {/* Primary Action Buttons (Vertical on mobile, Row on desktop) */}
+          <div className="pt-3 sm:pt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-4 max-w-md sm:max-w-none mx-auto">
+            <button
+              onClick={onOpenMenuBuilder}
+              className="w-full sm:w-auto px-7 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] bg-[#229938] hover:bg-[#1c822e] text-white shadow-lg shadow-emerald-950/80 transition-all hover:scale-102 active:scale-95 cursor-pointer flex items-center justify-center space-x-2 group min-h-[44px]"
+            >
+              <span>BUILD YOUR OWN MENU</span>
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            <button
+              onClick={onOpenPresetMenus}
+              className="w-full sm:w-auto px-6 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all cursor-pointer flex items-center justify-center space-x-2 min-h-[44px]"
+            >
+              <Sparkles className="w-4 h-4 text-emerald-400" />
+              <span>EXPLORE OUR MENUS</span>
+            </button>
+          </div>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12">
-          {MENU_CATEGORIES.map((cat, idx) => {
-            const isActive = idx === activeTab;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveTab(idx)}
-                className={`px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 cursor-pointer ${
-                  isActive
-                    ? "bg-[#229938] text-white shadow-lg shadow-emerald-950/60 scale-102"
-                    : "bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white border border-white/10"
-                }`}
-              >
-                {cat.title}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Showcase Editorial Card for Selected Category */}
-        <div className="bg-white/5 border border-white/15 rounded-2xl sm:rounded-3xl p-6 sm:p-10 backdrop-blur-md shadow-2xl transition-all duration-500">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Left Food Image */}
-            <div className="lg:col-span-5 relative h-72 sm:h-96 rounded-2xl overflow-hidden shadow-xl border border-white/10 group">
+        {/* ======================================================== */}
+        {/* MOBILE VIEW: Single card with arrow navigation */}
+        {/* ======================================================== */}
+        <div className="block md:hidden max-w-md mx-auto">
+          {/* Card Container */}
+          <div
+            onClick={onOpenMenuBuilder}
+            className="group relative rounded-2xl overflow-hidden border border-white/15 bg-white/5 shadow-xl cursor-pointer flex flex-col justify-between transition-all duration-300 active:scale-[0.99]"
+          >
+            {/* Card Image */}
+            <div className="relative h-48 w-full overflow-hidden">
               <Image
-                src={selected.image}
-                alt={selected.title}
+                src={activeStyle.image}
+                alt={activeStyle.title}
                 fill
-                className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover transition-transform duration-500"
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#09281E] via-black/35 to-transparent" />
+
+              <div className="absolute top-3 left-3">
+                <span className="px-2.5 py-1 rounded-full text-[9px] font-semibold tracking-wider uppercase bg-black/60 text-emerald-300 border border-white/20 backdrop-blur-md">
+                  {activeStyle.badge}
+                </span>
+              </div>
+
+              {/* Floating Left Arrow */}
+              <button
+                onClick={handlePrev}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-[#229938] text-white border border-white/25 flex items-center justify-center backdrop-blur-md shadow-lg transition-all cursor-pointer z-20 active:scale-90"
+                aria-label="Previous service style"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              {/* Floating Right Arrow */}
+              <button
+                onClick={handleNext}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-[#229938] text-white border border-white/25 flex items-center justify-center backdrop-blur-md shadow-lg transition-all cursor-pointer z-20 active:scale-90"
+                aria-label="Next service style"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
             </div>
 
-            {/* Right Menu Info & Sample Specialties */}
-            <div className="lg:col-span-7 space-y-6">
+            {/* Card Details */}
+            <div className="p-4 space-y-2.5 flex-1 flex flex-col justify-between">
               <div>
-                <span className="text-[10px] uppercase tracking-[0.25em] text-emerald-400 font-semibold">
-                  FEATURED EXPERIENCE
+                <div className="flex items-center justify-between">
+                  <h3 className="font-serif text-xl text-white font-normal">
+                    {activeStyle.title}
+                  </h3>
+                  <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-semibold">
+                    0{activeMobileIndex + 1} / 0{SERVICE_STYLES.length}
+                  </span>
+                </div>
+                <span className="text-[10.5px] text-emerald-400 font-medium block mt-0.5">
+                  {activeStyle.subtitle}
                 </span>
-                <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-white font-normal mt-1">
-                  {selected.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-300 font-light mt-2 leading-relaxed">
-                  {selected.subtitle}
+                <p className="text-xs text-gray-300 font-light mt-1.5 leading-relaxed">
+                  {activeStyle.description}
                 </p>
               </div>
 
-              {/* Highlights List */}
-              <div className="space-y-3 pt-2">
-                <span className="text-xs uppercase tracking-wider text-gray-400 font-medium block">
-                  Sample Culinary Highlights:
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {selected.highlights.map((item, i) => (
-                    <div key={i} className="flex items-start space-x-2 text-xs sm:text-sm text-gray-200">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                <button
-                  onClick={onOpenQuote}
-                  className="px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white transition-all shadow-md flex items-center justify-center cursor-pointer"
-                >
-                  <span>Request Custom Menu & Tasting</span>
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </button>
-
-                <a
-                  href={`https://wa.me/${siteConfig.contact.whatsapp}?text=Hello%20Green%20Apple%20Catering,%20I%20would%20like%20to%20know%20more%20about%20your%20menus.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all text-center"
-                >
-                  Chat on WhatsApp
-                </a>
+              <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-emerald-400">
+                <span>Customize {activeStyle.title}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </div>
             </div>
           </div>
+
+          {/* Dots Navigation Bar on Mobile */}
+          <div className="flex items-center justify-center space-x-2 pt-3">
+            {SERVICE_STYLES.map((st, idx) => {
+              const isActive = idx === activeMobileIndex;
+              return (
+                <button
+                  key={st.id}
+                  onClick={() => setActiveMobileIndex(idx)}
+                  className={`transition-all rounded-full cursor-pointer ${
+                    isActive
+                      ? "w-6 h-2 bg-[#229938]"
+                      : "w-2 h-2 bg-white/25 hover:bg-white/50"
+                  }`}
+                  aria-label={`Go to ${st.title}`}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* DESKTOP VIEW: 3-Column Grid */}
+        {/* ======================================================== */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+          {SERVICE_STYLES.map((style) => (
+            <div
+              key={style.id}
+              onClick={onOpenMenuBuilder}
+              className="group relative rounded-3xl overflow-hidden border border-white/15 bg-white/5 hover:border-emerald-400/50 shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between"
+            >
+              {/* Card Image */}
+              <div className="relative h-56 w-full overflow-hidden">
+                <Image
+                  src={style.image}
+                  alt={style.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  sizes="33vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#09281E] via-black/35 to-transparent" />
+                <div className="absolute top-3 left-3">
+                  <span className="px-2.5 py-1 rounded-full text-[9px] font-semibold tracking-wider uppercase bg-black/60 text-emerald-300 border border-white/20 backdrop-blur-md">
+                    {style.badge}
+                  </span>
+                </div>
+              </div>
+
+              {/* Card Details */}
+              <div className="p-5 lg:p-6 space-y-3 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-serif text-2xl text-white font-normal group-hover:text-emerald-300 transition-colors">
+                    {style.title}
+                  </h3>
+                  <span className="text-[11px] text-emerald-400 font-medium block mt-0.5">
+                    {style.subtitle}
+                  </span>
+                  <p className="text-xs text-gray-300 font-light mt-1.5 leading-relaxed">
+                    {style.description}
+                  </p>
+                </div>
+
+                <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-emerald-400 group-hover:text-emerald-300">
+                  <span>Customize {style.title}</span>
+                  <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
+
+
+
