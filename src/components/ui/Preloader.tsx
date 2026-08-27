@@ -3,7 +3,11 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
-export default function Preloader() {
+interface PreloaderProps {
+  durationMs?: number;
+}
+
+export default function Preloader({ durationMs = 1000 }: PreloaderProps) {
   const [loading, setLoading] = useState(true);
   const [shouldRender, setShouldRender] = useState(true);
 
@@ -11,18 +15,18 @@ export default function Preloader() {
     // Smooth loading duration
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1300);
+    }, durationMs);
 
     // Unmount after fade-out transition
     const unmountTimer = setTimeout(() => {
       setShouldRender(false);
-    }, 2000);
+    }, durationMs + 600);
 
     return () => {
       clearTimeout(timer);
       clearTimeout(unmountTimer);
     };
-  }, []);
+  }, [durationMs]);
 
   if (!shouldRender) return null;
 

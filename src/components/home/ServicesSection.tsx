@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, FileText } from "lucide-react";
 
 interface ServicesSectionProps {
@@ -15,6 +16,7 @@ const TWO_SERVICES = [
     category: "SIGNATURE FEASTS",
     description: "Thoughtfully crafted multi-cuisine menus for memorable celebrations.",
     linkText: "EXPLORE CATERING",
+    href: "/catering",
     image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1200&q=85",
     objectPosition: "object-center",
   },
@@ -24,6 +26,7 @@ const TWO_SERVICES = [
     category: "EVENTS & EXPERIENCES",
     description: "End-to-end event planning and execution that bring your vision to life.",
     linkText: "EXPLORE EVENTS",
+    href: "/events",
     image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=85",
     objectPosition: "object-center",
   },
@@ -95,48 +98,51 @@ export default function ServicesSection({ onOpenQuote }: ServicesSectionProps) {
 
         {/* Two-Service Grid (2 Columns on Mobile, Tablet & Desktop) */}
         <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:gap-8 max-w-5xl mx-auto">
-          {TWO_SERVICES.map((service) => (
-            <div
-              key={service.id}
-              onClick={onOpenQuote}
-              className="group relative h-[310px] sm:h-[400px] md:h-[420px] lg:h-[460px] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden border border-white/15 shadow-2xl transition-all duration-500 hover:border-emerald-400/40 hover:shadow-emerald-950/80 cursor-pointer flex flex-col justify-end p-3 sm:p-5 lg:p-7"
-            >
-              {/* Service Imagery */}
-              <Image
-                src={service.image}
-                alt={service.title}
-                fill
-                className={`object-cover ${service.objectPosition} group-hover:scale-105 transition-transform duration-700 ease-out`}
-                sizes="(max-width: 768px) 50vw, 50vw"
-                priority={service.id === "catering"}
-              />
+          {TWO_SERVICES.map((service) => {
+            const isExternalLink = service.href.startsWith("/");
+            return (
+              <Link
+                key={service.id}
+                href={service.href}
+                className="group relative h-[310px] sm:h-[400px] md:h-[420px] lg:h-[460px] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden border border-white/15 shadow-2xl transition-all duration-500 hover:border-emerald-400/40 hover:shadow-emerald-950/80 cursor-pointer flex flex-col justify-end p-3 sm:p-5 lg:p-7"
+              >
+                {/* Service Imagery */}
+                <Image
+                  src={service.image}
+                  alt={service.title}
+                  fill
+                  className={`object-cover ${service.objectPosition} group-hover:scale-105 transition-transform duration-700 ease-out`}
+                  sizes="(max-width: 768px) 50vw, 50vw"
+                  priority={service.id === "catering"}
+                />
 
-              {/* Dark Vignette Overlay for Text Legibility */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent group-hover:from-black/95 transition-colors duration-500" />
+                {/* Dark Vignette Overlay for Text Legibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent group-hover:from-black/95 transition-colors duration-500" />
 
-              {/* Card Content Overlay */}
-              <div className="relative z-10 transform group-hover:-translate-y-0.5 transition-transform duration-300">
-                <span className="text-[8px] sm:text-[10px] lg:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.24em] text-emerald-400 font-semibold block mb-0.5 sm:mb-1">
-                  {service.category}
-                </span>
+                {/* Card Content Overlay */}
+                <div className="relative z-10 transform group-hover:-translate-y-0.5 transition-transform duration-300">
+                  <span className="text-[8px] sm:text-[10px] lg:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.24em] text-emerald-400 font-semibold block mb-0.5 sm:mb-1">
+                    {service.category}
+                  </span>
 
-                <h3 className="font-serif text-lg sm:text-2xl lg:text-3xl xl:text-4xl text-white font-normal leading-tight drop-shadow-sm">
-                  {service.title}
-                </h3>
+                  <h3 className="font-serif text-lg sm:text-2xl lg:text-3xl xl:text-4xl text-white font-normal leading-tight drop-shadow-sm">
+                    {service.title}
+                  </h3>
 
-                <div className="w-6 sm:w-8 h-[1.5px] bg-[#229938] my-1.5 sm:my-2.5 lg:my-3" />
+                  <div className="w-6 sm:w-8 h-[1.5px] bg-[#229938] my-1.5 sm:my-2.5 lg:my-3" />
 
-                <p className="text-[10px] sm:text-xs lg:text-[13px] text-gray-200/90 font-light leading-snug sm:leading-relaxed max-w-sm mb-2 sm:mb-3 lg:mb-4 line-clamp-3 sm:line-clamp-none">
-                  {service.description}
-                </p>
+                  <p className="text-[10px] sm:text-xs lg:text-[13px] text-gray-200/90 font-light leading-snug sm:leading-relaxed max-w-sm mb-2 sm:mb-3 lg:mb-4 line-clamp-3 sm:line-clamp-none">
+                    {service.description}
+                  </p>
 
-                <div className="flex items-center text-[9px] sm:text-[11px] lg:text-xs font-semibold tracking-[0.14em] sm:tracking-[0.18em] text-white uppercase group-hover:text-emerald-400 transition-colors">
-                  <span>{service.linkText}</span>
-                  <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-1 sm:ml-1.5 transform group-hover:translate-x-1.5 transition-transform text-emerald-400" />
+                  <div className="flex items-center text-[9px] sm:text-[11px] lg:text-xs font-semibold tracking-[0.14em] sm:tracking-[0.18em] text-white uppercase group-hover:text-emerald-400 transition-colors">
+                    <span>{service.linkText}</span>
+                    <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-1 sm:ml-1.5 transform group-hover:translate-x-1.5 transition-transform text-emerald-400" />
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Primary CTA Button */}

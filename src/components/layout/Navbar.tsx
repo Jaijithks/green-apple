@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { siteConfig } from "@/data/site";
 import { Menu as MenuIcon, X, Utensils } from "lucide-react";
 import { WhatsAppSolidIcon } from "@/components/ui/Icons";
@@ -21,6 +22,10 @@ interface NavLinkItem {
 export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isCateringPage = pathname === "/catering";
+  const isEventsPage = pathname === "/events";
+  const isSubpage = isCateringPage || isEventsPage;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,15 +41,23 @@ export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) 
 
   const leftNav: NavLinkItem[] = [
     { label: "HOME", href: "/" },
-    { label: "ABOUT US", href: "#about" },
-    { label: "SERVICES", href: "#services" },
-    { label: "MENUS", href: "#menu" },
+    { label: "ABOUT US", href: isSubpage ? "/#about" : "#about" },
+    { label: "SERVICES", href: isSubpage ? "/#services" : "#services" },
+    { label: "EVENTS", href: "/events" },
+    { label: "MENUS", href: isSubpage ? "/#menu" : "#menu" },
   ];
 
   const rightNav: NavLinkItem[] = [
-    { label: "GALLERY", href: "#gallery" },
-    { label: "CONTACT", href: "#contact" },
+    { label: "GALLERY", href: isSubpage ? "/#gallery" : "#gallery" },
+    { label: "CONTACT", href: isSubpage ? "/#contact" : "#contact" },
   ];
+
+  const checkIsActive = (linkHref: string) => {
+    if (linkHref === "/catering" && isCateringPage) return true;
+    if (linkHref === "/events" && isEventsPage) return true;
+    if (linkHref === "/" && pathname === "/") return true;
+    return false;
+  };
 
   return (
     <>
@@ -69,15 +82,20 @@ export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) 
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-6">
-            {[...leftNav, ...rightNav].map((link) => (
-              link.external ? (
+          <nav className="hidden md:flex items-center space-x-5 lg:space-x-6">
+            {[...leftNav, ...rightNav].map((link) => {
+              const active = checkIsActive(link.href);
+              return link.external ? (
                 <a
                   key={link.label}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs tracking-widest uppercase text-gray-200 hover:text-emerald-400 font-medium transition-colors"
+                  className={`text-xs tracking-widest uppercase font-medium transition-colors whitespace-nowrap ${
+                    active
+                      ? "text-emerald-400 font-semibold border-b-2 border-[#229938] pb-0.5"
+                      : "text-gray-200 hover:text-emerald-400"
+                  }`}
                 >
                   {link.label}
                 </a>
@@ -85,12 +103,16 @@ export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) 
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="text-xs tracking-widest uppercase text-gray-200 hover:text-emerald-400 font-medium transition-colors"
+                  className={`text-xs tracking-widest uppercase font-medium transition-colors whitespace-nowrap ${
+                    active
+                      ? "text-emerald-400 font-semibold border-b-2 border-[#229938] pb-0.5"
+                      : "text-gray-200 hover:text-emerald-400"
+                  }`}
                 >
                   {link.label}
                 </Link>
-              )
-            ))}
+              );
+            })}
           </nav>
 
           <div className="flex items-center space-x-2.5 sm:space-x-3">
@@ -121,29 +143,36 @@ export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) 
       </header>
 
       {/* Hero Integrated Navigation (Editorial Centered Composition) */}
-      <nav className="w-full relative z-20 pt-5 sm:pt-6 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        {/* Desktop Layout (lg and above) */}
-        <div className="hidden lg:grid lg:grid-cols-12 lg:items-center">
-          {/* ZONE 1: Left Nav (Desktop) */}
-          <div className="flex items-center justify-end space-x-6 xl:space-x-7 lg:col-span-4">
-            {leftNav.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors duration-200 drop-shadow-md"
-              >
-                {item.label}
-              </Link>
-            ))}
+      <nav className="w-full relative z-20 pt-4 sm:pt-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        {/* Desktop Layout (lg and above): 5-2-5 Symmetric Grid */}
+        <div className="hidden lg:grid lg:grid-cols-12 lg:items-center w-full min-h-[72px]">
+          {/* ZONE 1: Left Wing (col-span-5) -> 5 Links, Right-Aligned */}
+          <div className="lg:col-span-5 flex items-center justify-end space-x-4 xl:space-x-6 pr-4 xl:pr-6">
+            {leftNav.map((item) => {
+              const active = checkIsActive(item.href);
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.18em] xl:tracking-[0.2em] uppercase transition-colors duration-200 drop-shadow-md whitespace-nowrap ${
+                    active
+                      ? "text-emerald-400 font-semibold border-b-2 border-[#229938] pb-0.5"
+                      : "text-white/90 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* ZONE 2: Centered Vertical Brand Logo Image */}
-          <div className="flex items-center justify-center lg:col-span-4">
+          {/* ZONE 2: Center Zone (col-span-2) -> Perfectly Centered Logo */}
+          <div className="lg:col-span-2 flex items-center justify-center">
             <Link
               href="/"
               className="group cursor-pointer flex items-center justify-center"
             >
-              <div className="relative w-40 sm:w-44 md:w-48 h-16 sm:h-20 group-hover:scale-104 transition-transform duration-300 flex items-center justify-center">
+              <div className="relative w-36 sm:w-40 md:w-44 h-16 sm:h-18 group-hover:scale-104 transition-transform duration-300 flex items-center justify-center">
                 <Image
                   src="/logo/green apple logo vertical.png"
                   alt="Green Apple Catering & Event Company"
@@ -156,16 +185,21 @@ export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) 
             </Link>
           </div>
 
-          {/* ZONE 3: Right Nav (Desktop) */}
-          <div className="flex items-center justify-start space-x-4 xl:space-x-5 lg:col-span-4 pl-4">
-            {rightNav.map((item) => (
-              item.external ? (
+          {/* ZONE 3: Right Wing (col-span-5) -> 2 Links + 2 Action Buttons, Left-Aligned */}
+          <div className="lg:col-span-5 flex items-center justify-start space-x-3.5 xl:space-x-4 pl-4 xl:pl-6">
+            {rightNav.map((item) => {
+              const active = checkIsActive(item.href);
+              return item.external ? (
                 <a
                   key={item.label}
                   href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors duration-200 drop-shadow-md"
+                  className={`text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.18em] xl:tracking-[0.2em] uppercase transition-colors duration-200 drop-shadow-md whitespace-nowrap ${
+                    active
+                      ? "text-emerald-400 font-semibold border-b-2 border-[#229938] pb-0.5"
+                      : "text-white/90 hover:text-white"
+                  }`}
                 >
                   {item.label}
                 </a>
@@ -173,16 +207,20 @@ export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) 
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors duration-200 drop-shadow-md"
+                  className={`text-[10.5px] xl:text-[11.5px] font-medium tracking-[0.18em] xl:tracking-[0.2em] uppercase transition-colors duration-200 drop-shadow-md whitespace-nowrap ${
+                    active
+                      ? "text-emerald-400 font-semibold border-b-2 border-[#229938] pb-0.5"
+                      : "text-white/90 hover:text-white"
+                  }`}
                 >
                   {item.label}
                 </Link>
-              )
-            ))}
+              );
+            })}
 
             <button
               onClick={onOpenMenuBuilder}
-              className="px-3.5 py-1.5 rounded-full text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-[0.14em] bg-[#229938] hover:bg-[#1c822e] text-white transition-all duration-200 shadow-md cursor-pointer whitespace-nowrap"
+              className="px-3.5 py-1.5 rounded-full text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-[0.14em] bg-[#229938] hover:bg-[#1c822e] text-white transition-all duration-200 shadow-md cursor-pointer whitespace-nowrap ml-1"
             >
               Build Menu
             </button>
@@ -261,15 +299,18 @@ export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) 
           </div>
 
           <div className="flex flex-col space-y-4 py-8 flex-1 justify-center items-center text-center">
-            {[...leftNav, ...rightNav].map((link) => (
-              link.external ? (
+            {[...leftNav, ...rightNav].map((link) => {
+              const active = checkIsActive(link.href);
+              return link.external ? (
                 <a
                   key={link.label}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="font-serif text-2xl text-gray-100 hover:text-emerald-400 transition-colors tracking-wide"
+                  className={`font-serif text-2xl transition-colors tracking-wide ${
+                    active ? "text-emerald-400 font-bold" : "text-gray-100 hover:text-emerald-400"
+                  }`}
                 >
                   {link.label}
                 </a>
@@ -278,12 +319,14 @@ export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) 
                   key={link.label}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="font-serif text-2xl text-gray-100 hover:text-emerald-400 transition-colors tracking-wide"
+                  className={`font-serif text-2xl transition-colors tracking-wide ${
+                    active ? "text-emerald-400 font-bold" : "text-gray-100 hover:text-emerald-400"
+                  }`}
                 >
                   {link.label}
                 </Link>
-              )
-            ))}
+              );
+            })}
           </div>
 
           <div className="pt-6 border-t border-white/10 space-y-3">
