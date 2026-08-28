@@ -64,7 +64,7 @@ export const SERVICE_STYLES: ServiceStyle[] = [
     title: "BUFFET",
     subtitle: "Interactive Multi-Counter Spread",
     description: "Guests walk through beautifully styled catering counters and live action stations at their own pace.",
-    image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1000&q=85",
+    image: "/services/buffet.png",
     badge: "Most Popular for Receptions & Galas",
   },
   {
@@ -72,7 +72,7 @@ export const SERVICE_STYLES: ServiceStyle[] = [
     title: "TABLE SERVICE",
     subtitle: "Seated Royal Dining",
     description: "Guests remain seated while each curated course is served directly to tables and refreshed with attentive hospitality.",
-    image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1000&q=85",
+    image: "/services/table service.png",
     badge: "Ideal for Intimate & VIP Gatherings",
   },
   {
@@ -80,7 +80,7 @@ export const SERVICE_STYLES: ServiceStyle[] = [
     title: "SADYA",
     subtitle: "Traditional Kerala Feast",
     description: "Guests are seated and authentic dishes are served sequentially on fresh green plantain leaves in time-honored tradition.",
-    image: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=1000&q=85",
+    image: "/services/sadya.png",
     badge: "Heritage Wedding & Festive Tradition",
   },
 ];
@@ -676,7 +676,7 @@ export const PRESET_MENUS: PresetMenu[] = [
     name: "Royal Wedding Grand Feast",
     tagline: "The Pinnacle of Celebratory Luxury",
     description: "A sumptuous multi-cuisine spread designed for grand wedding receptions, complete with live counters, signature biryani, tender meats, and artisanal desserts.",
-    image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1000&q=85",
+    image: "/services/buffet.png",
     serviceStyle: "buffet",
     idealFor: "Wedding Receptions, Engagements & Grand Galas",
     itemIds: [
@@ -713,7 +713,7 @@ export const PRESET_MENUS: PresetMenu[] = [
     name: "Traditional Kerala Sadya",
     tagline: "Authentic Heritage 24+ Item Feast",
     description: "Time-honored vegetarian banquet served on fresh banana leaves with pure ghee, parippu, sambar, avial, kalan, upperi, and dual royal payasams.",
-    image: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=1000&q=85",
+    image: "/services/sadya.png",
     serviceStyle: "sadya",
     idealFor: "Traditional Weddings, Housewarmings & Festive Occasions",
     itemIds: [
@@ -738,7 +738,7 @@ export const PRESET_MENUS: PresetMenu[] = [
     name: "Signature Multi-Cuisine Buffet",
     tagline: "Curated Flavours for Contemporary Gatherings",
     description: "A balanced selection of Kerala favorites, North Indian tandoori specialties, flaky parottas, and chilled desserts perfect for family milestones and celebrations.",
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1000&q=85",
+    image: "/services/table service.png",
     serviceStyle: "buffet",
     idealFor: "Anniversaries, Birthday Galas & Social Gatherings",
     itemIds: [
