@@ -208,6 +208,27 @@ export default function MenuBuilderModal({
     );
   }, [activeCategoryId, selectedServiceStyle, allItems]);
 
+  const currentCatIndex = availableCategories.findIndex((c: any) => c.id === activeCategoryId);
+  const safeCatIndex = currentCatIndex >= 0 ? currentCatIndex : 0;
+  const hasPrevCategory = safeCatIndex > 0;
+  const hasNextCategory = safeCatIndex < availableCategories.length - 1;
+  const nextCategory = hasNextCategory ? availableCategories[safeCatIndex + 1] : null;
+  const prevCategory = hasPrevCategory ? availableCategories[safeCatIndex - 1] : null;
+
+  const handleNextCategory = () => {
+    if (nextCategory) {
+      setActiveCategoryId(nextCategory.id);
+    }
+  };
+
+  const handlePrevCategory = () => {
+    if (prevCategory) {
+      setActiveCategoryId(prevCategory.id);
+    } else {
+      setCurrentStep(1);
+    }
+  };
+
   const selectedItems = useMemo(() => {
     return allItems.filter((i) => selectedItemIds.includes(i.id));
   }, [selectedItemIds, allItems]);
@@ -579,17 +600,26 @@ export default function MenuBuilderModal({
 
             {currentStep === 2 && (
               <div className="max-w-4xl mx-auto space-y-3 sm:space-y-4 animate-fadeIn">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-2.5 gap-2">
                   <div>
-                    <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.25em] text-emerald-400 font-bold block">
-                      STEP 02 · {selectedServiceStyle.toUpperCase()}
-                    </span>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.25em] text-emerald-400 font-bold block">
+                        STEP 02 · {selectedServiceStyle.toUpperCase()}
+                      </span>
+                      {availableCategories.length > 1 && (
+                        <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-emerald-300/80 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+                          Section {safeCatIndex + 1} of {availableCategories.length}
+                        </span>
+                      )}
+                    </div>
                     <h2 className="font-serif text-lg sm:text-2xl text-white font-normal mt-0.5">
-                      Select Dishes & Specialties
+                      Select Dishes: <span className="text-emerald-400 font-medium">{activeCategory.name}</span>
                     </h2>
                   </div>
-                  <div className="text-[11px] text-emerald-300 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-500/30 font-medium">
-                    <span className="font-bold text-white">{selectedItems.length}</span> chosen
+                  <div className="flex items-center gap-2 self-start sm:self-auto">
+                    <div className="text-[11px] text-emerald-300 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-500/30 font-medium">
+                      <span className="font-bold text-white">{selectedItems.length}</span> items chosen
+                    </div>
                   </div>
                 </div>
 
@@ -683,22 +713,33 @@ export default function MenuBuilderModal({
                   })}
                 </div>
 
-                <div className="pt-4 flex items-center justify-between gap-3">
+                <div className="pt-5 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                   <button
-                    onClick={() => setCurrentStep(1)}
-                    className="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white border border-white/15 transition-all flex items-center space-x-1.5 cursor-pointer min-h-[44px]"
+                    onClick={handlePrevCategory}
+                    className="px-4 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white border border-white/15 transition-all flex items-center justify-center space-x-1.5 cursor-pointer min-h-[44px]"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>BACK</span>
+                    <span>{hasPrevCategory ? `PREV: ${prevCategory?.shortName || "SECTION"}` : "BACK"}</span>
                   </button>
 
-                  <button
-                    onClick={() => setCurrentStep(3)}
-                    className="flex-1 sm:flex-initial px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-lg transition-all flex items-center justify-center space-x-2 cursor-pointer min-h-[44px]"
-                  >
-                    <span>ORGANIZE PLAN</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+                    {hasNextCategory && (
+                      <button
+                        onClick={handleNextCategory}
+                        className="px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-emerald-300 border border-emerald-400/40 hover:border-emerald-400 transition-all flex items-center justify-center space-x-2 cursor-pointer min-h-[44px]"
+                      >
+                        <span>NEXT SECTION: {nextCategory?.shortName || "NEXT"}</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => setCurrentStep(3)}
+                      className="px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-lg shadow-emerald-950/50 transition-all flex items-center justify-center space-x-2 cursor-pointer min-h-[44px]"
+                    >
+                      <span>PROCEED →</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
