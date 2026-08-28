@@ -134,16 +134,59 @@ export default function MenuBuilderModal({
     }
   }, [selectedServiceStyle, selectedItemIds, counters, eventDetails]);
 
+  const [dynamicItems, setDynamicItems] = useState<MenuItem[]>([]);
+  const [dynamicCategories, setDynamicCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch("/api/menu/items?active=true")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+          const mapped: MenuItem[] = data.data.map((item: any) => ({
+            id: item.slug || item._id,
+            name: item.name,
+            category: item.category,
+            description: item.description,
+            image: item.image,
+            serviceStyles: item.serviceStyles,
+            isSignature: item.isSignature || item.isPopular,
+          }));
+          setDynamicItems(mapped);
+        }
+      })
+      .catch(() => {});
+
+    fetch("/api/menu/categories?active=true")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+          const mapped = data.data.map((cat: any, idx: number) => ({
+            id: cat.slug,
+            number: cat.number || `${idx + 1}`.padStart(2, "0"),
+            name: cat.name,
+            shortName: cat.shortName || cat.name,
+            serviceStyles: cat.serviceStyles,
+            description: cat.description,
+          }));
+          setDynamicCategories(mapped);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const allCategories = dynamicCategories.length > 0 ? dynamicCategories : MENU_CATEGORIES;
+  const allItems = dynamicItems.length > 0 ? dynamicItems : MENU_ITEMS;
+
   const availableCategories = useMemo(() => {
-    return MENU_CATEGORIES.filter((cat) =>
+    return allCategories.filter((cat: any) =>
       !cat.serviceStyles || cat.serviceStyles.includes(selectedServiceStyle)
     );
-  }, [selectedServiceStyle]);
+  }, [selectedServiceStyle, allCategories]);
 
   useEffect(() => {
     if (
       availableCategories.length > 0 &&
-      !availableCategories.some((c) => c.id === activeCategoryId)
+      !availableCategories.some((c: any) => c.id === activeCategoryId)
     ) {
       setActiveCategoryId(availableCategories[0].id);
     }
@@ -151,23 +194,23 @@ export default function MenuBuilderModal({
 
   const activeCategory = useMemo(() => {
     return (
-      MENU_CATEGORIES.find((c) => c.id === activeCategoryId) ||
+      allCategories.find((c: any) => c.id === activeCategoryId) ||
       availableCategories[0] ||
-      MENU_CATEGORIES[0]
+      allCategories[0]
     );
-  }, [activeCategoryId, availableCategories]);
+  }, [activeCategoryId, availableCategories, allCategories]);
 
   const categoryItems = useMemo(() => {
-    return MENU_ITEMS.filter(
+    return allItems.filter(
       (item) =>
         item.category === activeCategoryId &&
         (!item.serviceStyles || item.serviceStyles.includes(selectedServiceStyle))
     );
-  }, [activeCategoryId, selectedServiceStyle]);
+  }, [activeCategoryId, selectedServiceStyle, allItems]);
 
   const selectedItems = useMemo(() => {
-    return MENU_ITEMS.filter((i) => selectedItemIds.includes(i.id));
-  }, [selectedItemIds]);
+    return allItems.filter((i) => selectedItemIds.includes(i.id));
+  }, [selectedItemIds, allItems]);
 
   const selectedItemsByCategory = useMemo(() => {
     const grouped: Record<string, MenuItem[]> = {};
@@ -187,9 +230,8 @@ export default function MenuBuilderModal({
   const handleSelectServiceStyle = (styleId: ServiceStyleId) => {
     setSelectedServiceStyle(styleId);
     if (selectedItemIds.length === 0) {
-      const defaultItems = MENU_ITEMS.filter(
-        (i) => (!i.serviceStyles || i.serviceStyles.includes(styleId)) && i.isSignature
-      )
+      const defaultItems = allItems
+        .filter((i) => (!i.serviceStyles || i.serviceStyles.includes(styleId)) && i.isSignature)
         .slice(0, 6)
         .map((i) => i.id);
       setSelectedItemIds(defaultItems);

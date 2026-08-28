@@ -13,90 +13,7 @@ export interface GalleryMediaItem {
   alt: string;
 }
 
-// Curated Media matching the two reference images
-const GALLERY_MEDIA: GalleryMediaItem[] = [
-  // 1. Long Banquet Table with String Lights (Photo)
-  {
-    id: "gallery-1",
-    type: "image",
-    src: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85",
-    alt: "Outdoor wedding dinner reception banquet under warm glowing string lights",
-  },
-  // 2. Buffet Bowls & Fresh Salad Spread (Photo)
-  {
-    id: "gallery-2",
-    type: "image",
-    src: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=85",
-    alt: "Artisanal catering buffet spread with gourmet salads and warm delicacies",
-  },
-  // 3. Floral Bouquet Close-up (Video)
-  {
-    id: "gallery-3",
-    type: "video",
-    src: "https://assets.mixkit.co/videos/preview/mixkit-bride-holding-a-wedding-bouquet-43180-large.mp4",
-    poster: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=85",
-    alt: "Cinematic bridal wedding floral bouquet presentation",
-  },
-  // 4. Three-Tier Floral Wedding Cake (Photo - Desktop)
-  {
-    id: "gallery-4",
-    type: "image",
-    src: "https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&w=800&q=85",
-    alt: "Elegant three-tiered wedding cake styled with fresh white roses",
-  },
-  // 5. Canapés & Pastry Bites on Platter (Photo)
-  {
-    id: "gallery-5",
-    type: "image",
-    src: "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=800&q=85",
-    alt: "Gourmet canapés and savory appetizers presented on serving tray",
-  },
-  // 6. Grand Pavilion Wedding Mandap (Video)
-  {
-    id: "gallery-6",
-    type: "video",
-    src: "https://assets.mixkit.co/videos/preview/mixkit-wedding-tables-in-a-hall-decorated-for-a-celebration-43181-large.mp4",
-    poster: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=85",
-    alt: "Grand wedding pavilion and luxury floral decor setup",
-  },
-  // 7. Chef Slicing Roast Meat on Wooden Platter (Photo)
-  {
-    id: "gallery-7",
-    type: "image",
-    src: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=85",
-    alt: "Chef carving gourmet roast barbecue meat and appetizers on wooden board",
-  },
-  // 8. Floral Candelabra Banquet Centerpiece (Photo)
-  {
-    id: "gallery-8",
-    type: "image",
-    src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=85",
-    alt: "Grand banquet table centerpiece with fresh roses and crystal glassware",
-  },
-  // 9. Royal Wedding Canopy Stage with Chandeliers (Video)
-  {
-    id: "gallery-9",
-    type: "video",
-    src: "https://assets.mixkit.co/videos/preview/mixkit-wedding-ceremony-decorations-43182-large.mp4",
-    poster: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=85",
-    alt: "Royal wedding stage styling with floral arches and hanging chandeliers",
-  },
-  // 10. Glass Cups Dessert / Appetizer Spread (Photo)
-  {
-    id: "gallery-10",
-    type: "image",
-    src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=85",
-    alt: "Individual gourmet dessert parfait cups and refreshing starters",
-  },
-  // 11. Outdoor Garden Lounge Celebration (Video - Mobile Full Width Feature)
-  {
-    id: "gallery-11",
-    type: "video",
-    src: "https://assets.mixkit.co/videos/preview/mixkit-people-celebrating-at-a-wedding-reception-43183-large.mp4",
-    poster: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=85",
-    alt: "Outdoor celebration lounge seating with fairy lights under trees",
-  },
-];
+
 
 // Video Tile Component with Lazy Autoplay & In-tile Mute Toggle
 function VideoTile({
@@ -112,7 +29,15 @@ function VideoTile({
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const isVideo =
+    item.type === "video" ||
+    (typeof item.src === "string" &&
+      (item.src.endsWith(".mp4") ||
+        item.src.endsWith(".webm") ||
+        item.src.includes("/videos/")));
+
   useEffect(() => {
+    if (!isVideo) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -132,7 +57,7 @@ function VideoTile({
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [isVideo]);
 
   const toggleMute = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -142,20 +67,25 @@ function VideoTile({
     }
   };
 
+  // If item is not a video, fallback safely to image
+  if (!isVideo) {
+    return <ImageTile item={item} onClick={onClick} className={className} />;
+  }
+
   return (
     <div
       onClick={onClick}
-      className={`group relative overflow-hidden rounded-[16px] bg-black/40 cursor-pointer ${className}`}
+      className={`group relative overflow-hidden rounded-[16px] bg-[#072018] cursor-pointer ${className}`}
     >
       <video
         ref={videoRef}
         src={item.src}
         poster={item.poster}
-        muted={isMuted}
+        muted
         loop
         playsInline
-        autoPlay
-        className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700 ease-out"
+        preload="metadata"
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
       />
 
       {/* Dark Vignette Overlay */}
@@ -190,14 +120,30 @@ function ImageTile({
   onClick: () => void;
   className?: string;
 }) {
+  const isVideo =
+    item.type === "video" ||
+    (typeof item.src === "string" &&
+      (item.src.endsWith(".mp4") ||
+        item.src.endsWith(".webm") ||
+        item.src.includes("/videos/")));
+
+  if (isVideo) {
+    return <VideoTile item={item} onClick={onClick} className={className} />;
+  }
+
+  const validSrc =
+    item.src && !item.src.endsWith(".mp4") && !item.src.endsWith(".webm")
+      ? item.src
+      : item.poster || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85";
+
   return (
     <div
       onClick={onClick}
       className={`group relative overflow-hidden rounded-[16px] bg-[#072018] cursor-pointer ${className}`}
     >
       <Image
-        src={item.src}
-        alt={item.alt}
+        src={validSrc}
+        alt={item.alt || "Green Apple Catering"}
         fill
         className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
         sizes="(max-width: 768px) 50vw, 25vw"
@@ -213,19 +159,44 @@ interface GalleryPreviewProps {
 
 export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewProps) {
   const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
+  const [galleryMedia, setGalleryMedia] = useState<GalleryMediaItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/gallery?active=true")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+          const mapped = data.data.map((item: any, idx: number) => ({
+            id: item._id || `gal-${idx}`,
+            type: item.type === "video" ? "video" : "image",
+            src: item.src,
+            poster: item.poster || undefined,
+            alt: item.alt || item.title || "Green Apple Catering gallery showcase",
+          }));
+          setGalleryMedia(mapped);
+        } else {
+          setGalleryMedia([]);
+        }
+      })
+      .catch(() => {
+        setGalleryMedia([]);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const openLightbox = (index: number) => setActiveLightboxIndex(index);
   const closeLightbox = () => setActiveLightboxIndex(null);
 
   const prevItem = useCallback(() => {
-    if (activeLightboxIndex === null) return;
-    setActiveLightboxIndex((prev) => (prev! - 1 + GALLERY_MEDIA.length) % GALLERY_MEDIA.length);
-  }, [activeLightboxIndex]);
+    if (activeLightboxIndex === null || galleryMedia.length === 0) return;
+    setActiveLightboxIndex((prev) => (prev! - 1 + galleryMedia.length) % galleryMedia.length);
+  }, [activeLightboxIndex, galleryMedia.length]);
 
   const nextItem = useCallback(() => {
-    if (activeLightboxIndex === null) return;
-    setActiveLightboxIndex((prev) => (prev! + 1) % GALLERY_MEDIA.length);
-  }, [activeLightboxIndex]);
+    if (activeLightboxIndex === null || galleryMedia.length === 0) return;
+    setActiveLightboxIndex((prev) => (prev! + 1) % galleryMedia.length);
+  }, [activeLightboxIndex, galleryMedia.length]);
 
   // Keyboard navigation for Lightbox
   useEffect(() => {
@@ -281,148 +252,93 @@ export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewPro
           </div>
         </div>
 
-        {/* ========================================================================= */}
-        {/* DESKTOP GALLERY MOSAIC (Hidden on Mobile/Tablet, visible on lg and above) */}
-        {/* ========================================================================= */}
-        <div className="hidden lg:grid lg:grid-cols-4 gap-4 xl:gap-5">
-          {/* COLUMN 1 */}
-          <div className="flex flex-col space-y-4 xl:space-y-5">
-            {/* Top: Long Banquet Table (Photo, tall) */}
-            <ImageTile
-              item={GALLERY_MEDIA[0]}
-              onClick={() => openLightbox(0)}
-              className="h-[340px] w-full shadow-sm"
-            />
-            {/* Bottom: Grand Pavilion Mandap (Video) */}
-            <VideoTile
-              item={GALLERY_MEDIA[5]}
-              onClick={() => openLightbox(5)}
-              className="h-[235px] w-full shadow-sm"
-            />
+        {/* Dynamic Gallery Content */}
+        {loading ? (
+          <div className="py-16 text-center text-gray-400 text-xs">
+            Loading gallery showcases...
           </div>
-
-          {/* COLUMN 2 */}
-          <div className="flex flex-col space-y-4 xl:space-y-5">
-            {/* Top: Buffet Bowls (Photo) */}
-            <ImageTile
-              item={GALLERY_MEDIA[1]}
-              onClick={() => openLightbox(1)}
-              className="h-[160px] w-full shadow-sm"
-            />
-            {/* Middle: Canapés Platter (Photo) */}
-            <ImageTile
-              item={GALLERY_MEDIA[4]}
-              onClick={() => openLightbox(4)}
-              className="h-[160px] w-full shadow-sm"
-            />
-            {/* Bottom: Chef Slicing Roast Meat (Photo) */}
-            <ImageTile
-              item={GALLERY_MEDIA[6]}
-              onClick={() => openLightbox(6)}
-              className="h-[235px] w-full shadow-sm"
-            />
+        ) : galleryMedia.length === 0 ? (
+          <div className="py-16 px-6 text-center max-w-lg mx-auto bg-white/70 border border-emerald-900/10 rounded-3xl space-y-4 shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-[#229938] flex items-center justify-center mx-auto shadow-xs">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                <circle cx="9" cy="9" r="2"/>
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-serif text-2xl text-gray-900 font-normal">The gallery is empty</h3>
+              <p className="text-xs text-gray-500 font-light mt-1 max-w-sm mx-auto leading-relaxed">
+                Photos and video showcases will appear here once added in the CMS admin dashboard.
+              </p>
+            </div>
+            <div className="pt-1">
+              <Link
+                href="/admin/gallery"
+                className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#072018] text-white hover:bg-[#0E362A] transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                <span>Add Photos & Videos</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
+        ) : (
+          <>
+            {/* DESKTOP DYNAMIC GALLERY MOSAIC */}
+            <div className="hidden lg:grid lg:grid-cols-4 gap-4 xl:gap-5 auto-rows-[160px]">
+              {galleryMedia.map((item, idx) => {
+                const isTall = idx % 5 === 0 || idx % 7 === 0;
+                return (
+                  <div
+                    key={item.id || idx}
+                    className={isTall ? "row-span-2" : "row-span-1"}
+                  >
+                    {item.type === "video" ? (
+                      <VideoTile
+                        item={item}
+                        onClick={() => openLightbox(idx)}
+                        className="w-full h-full shadow-sm min-h-[160px]"
+                      />
+                    ) : (
+                      <ImageTile
+                        item={item}
+                        onClick={() => openLightbox(idx)}
+                        className="w-full h-full shadow-sm min-h-[160px]"
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
 
-          {/* COLUMN 3 */}
-          <div className="flex flex-col space-y-4 xl:space-y-5">
-            {/* Top: Floral Bouquet (Video, tall) */}
-            <VideoTile
-              item={GALLERY_MEDIA[2]}
-              onClick={() => openLightbox(2)}
-              className="h-[340px] w-full shadow-sm"
-            />
-            {/* Bottom: Candelabra Banquet Setting (Photo) */}
-            <ImageTile
-              item={GALLERY_MEDIA[7]}
-              onClick={() => openLightbox(7)}
-              className="h-[235px] w-full shadow-sm"
-            />
-          </div>
-
-          {/* COLUMN 4 */}
-          <div className="flex flex-col space-y-4 xl:space-y-5">
-            {/* Top: 3-Tier Wedding Cake (Photo) */}
-            <ImageTile
-              item={GALLERY_MEDIA[3]}
-              onClick={() => openLightbox(3)}
-              className="h-[260px] w-full shadow-sm"
-            />
-            {/* Middle: Royal Wedding Stage (Video) */}
-            <VideoTile
-              item={GALLERY_MEDIA[8]}
-              onClick={() => openLightbox(8)}
-              className="h-[175px] w-full shadow-sm"
-            />
-            {/* Bottom: Dessert Glasses (Photo) */}
-            <ImageTile
-              item={GALLERY_MEDIA[9]}
-              onClick={() => openLightbox(9)}
-              className="h-[120px] w-full shadow-sm"
-            />
-          </div>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* MOBILE GALLERY MOSAIC (Visible on Mobile/Tablet, hidden on lg and above)  */}
-        {/* ========================================================================= */}
-        <div className="grid lg:hidden grid-cols-2 gap-3 sm:gap-4">
-          {/* Row 1: Left Banquet Photo | Right Buffet Photo */}
-          <ImageTile
-            item={GALLERY_MEDIA[0]}
-            onClick={() => openLightbox(0)}
-            className="h-[175px] sm:h-[220px] w-full shadow-sm"
-          />
-          <ImageTile
-            item={GALLERY_MEDIA[1]}
-            onClick={() => openLightbox(1)}
-            className="h-[175px] sm:h-[220px] w-full shadow-sm"
-          />
-
-          {/* Row 2: Left Bouquet Video | Right Canapés Photo */}
-          <VideoTile
-            item={GALLERY_MEDIA[2]}
-            onClick={() => openLightbox(2)}
-            className="h-[175px] sm:h-[220px] w-full shadow-sm"
-          />
-          <ImageTile
-            item={GALLERY_MEDIA[4]}
-            onClick={() => openLightbox(4)}
-            className="h-[175px] sm:h-[220px] w-full shadow-sm"
-          />
-
-          {/* Row 3: Left Chef Slicing Photo | Right Royal Canopy Stage Video */}
-          <ImageTile
-            item={GALLERY_MEDIA[6]}
-            onClick={() => openLightbox(6)}
-            className="h-[175px] sm:h-[220px] w-full shadow-sm"
-          />
-          <VideoTile
-            item={GALLERY_MEDIA[8]}
-            onClick={() => openLightbox(8)}
-            className="h-[175px] sm:h-[220px] w-full shadow-sm"
-          />
-
-          {/* Row 4: Left Candelabra Photo | Right Dessert Spread Photo */}
-          <ImageTile
-            item={GALLERY_MEDIA[7]}
-            onClick={() => openLightbox(7)}
-            className="h-[175px] sm:h-[220px] w-full shadow-sm"
-          />
-          <ImageTile
-            item={GALLERY_MEDIA[9]}
-            onClick={() => openLightbox(9)}
-            className="h-[175px] sm:h-[220px] w-full shadow-sm"
-          />
-
-          {/* Row 5: Full-Width Feature Outdoor Celebration Lounge Video */}
-          <div className="col-span-2">
-            <VideoTile
-              item={GALLERY_MEDIA[10]}
-              onClick={() => openLightbox(10)}
-              className="h-[200px] sm:h-[260px] w-full shadow-sm"
-            />
-          </div>
-        </div>
+            {/* MOBILE DYNAMIC GALLERY MOSAIC */}
+            <div className="grid lg:hidden grid-cols-2 gap-3 sm:gap-4 auto-rows-[170px]">
+              {galleryMedia.map((item, idx) => {
+                const isFullWidth = idx % 5 === 4;
+                return (
+                  <div
+                    key={item.id || idx}
+                    className={isFullWidth ? "col-span-2" : "col-span-1"}
+                  >
+                    {item.type === "video" ? (
+                      <VideoTile
+                        item={item}
+                        onClick={() => openLightbox(idx)}
+                        className="w-full h-full shadow-sm min-h-[170px]"
+                      />
+                    ) : (
+                      <ImageTile
+                        item={item}
+                        onClick={() => openLightbox(idx)}
+                        className="w-full h-full shadow-sm min-h-[170px]"
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
 
         {/* Bottom CTA Button & Delicate Leaf Divider Ornament */}
         <div className="mt-10 sm:mt-14 flex flex-col items-center text-center">
@@ -502,11 +418,11 @@ export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewPro
 
           {/* Active Media Container */}
           <div className="relative max-w-5xl max-h-[85vh] w-full h-full flex flex-col items-center justify-center">
-            {GALLERY_MEDIA[activeLightboxIndex].type === "video" ? (
+            {galleryMedia[activeLightboxIndex]?.type === "video" ? (
               <div className="relative w-full h-[70vh] max-h-[600px] flex items-center justify-center rounded-2xl overflow-hidden bg-black shadow-2xl">
                 <video
-                  src={GALLERY_MEDIA[activeLightboxIndex].src}
-                  poster={GALLERY_MEDIA[activeLightboxIndex].poster}
+                  src={galleryMedia[activeLightboxIndex]?.src}
+                  poster={galleryMedia[activeLightboxIndex]?.poster}
                   controls
                   autoPlay
                   playsInline
@@ -516,8 +432,8 @@ export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewPro
             ) : (
               <div className="relative w-full h-[70vh] max-h-[650px]">
                 <Image
-                  src={GALLERY_MEDIA[activeLightboxIndex].src}
-                  alt={GALLERY_MEDIA[activeLightboxIndex].alt}
+                  src={galleryMedia[activeLightboxIndex]?.src || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85"}
+                  alt={galleryMedia[activeLightboxIndex]?.alt || "Gallery Image"}
                   fill
                   className="object-contain"
                   sizes="90vw"
@@ -527,10 +443,10 @@ export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewPro
 
             {/* Bottom Caption & Counter */}
             <div className="mt-4 text-center text-white/80 text-xs sm:text-sm font-light flex items-center space-x-3">
-              <span>{GALLERY_MEDIA[activeLightboxIndex].alt}</span>
+              <span>{galleryMedia[activeLightboxIndex]?.alt}</span>
               <span className="text-white/40">•</span>
               <span className="text-emerald-400 font-medium">
-                {activeLightboxIndex + 1} / {GALLERY_MEDIA.length}
+                {activeLightboxIndex + 1} / {galleryMedia.length}
               </span>
             </div>
           </div>
