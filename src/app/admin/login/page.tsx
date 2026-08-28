@@ -7,8 +7,8 @@ import { Lock, Mail, ArrowRight, Loader2, ShieldCheck } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@greenapplecatering.in");
-  const [password, setPassword] = useState("GreenAppleAdmin@2026!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@greenapplecatering.in"
+                placeholder="username"
                 className="w-full pl-10 pr-4 py-2.5 bg-black/40 border border-white/15 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
               />
             </div>
@@ -126,19 +126,7 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        {/* Demo Credentials Helper */}
-        <div className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-1 text-[11px] text-gray-300">
-          <div className="flex items-center space-x-1.5 text-emerald-400 font-semibold">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Default Initial Admin Credentials</span>
-          </div>
-          <p className="text-gray-400 font-mono text-[10px]">
-            Email: <span className="text-gray-200">admin@greenapplecatering.in</span>
-          </p>
-          <p className="text-gray-400 font-mono text-[10px]">
-            Password: <span className="text-gray-200">GreenAppleAdmin@2026!</span>
-          </p>
-        </div>
+
       </div>
     </div>
   );

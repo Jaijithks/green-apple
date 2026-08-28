@@ -19,13 +19,13 @@ export interface AdminSessionPayload {
 }
 
 /**
- * Sign JWT token valid for 7 days
+ * Sign JWT token valid for 2 hours
  */
 export async function signAdminToken(payload: AdminSessionPayload): Promise<string> {
   return await new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("7d")
+    .setExpirationTime("2h")
     .sign(JWT_SECRET);
 }
 
@@ -61,7 +61,7 @@ export async function setAdminSessionCookie(token: string): Promise<void> {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 7 * 24 * 60 * 60, // 7 days
+    maxAge: 2 * 60 * 60, // 2 hours
   });
 }
 
