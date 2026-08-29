@@ -32,7 +32,7 @@ const TESTIMONIALS = [
 
 export default function TestimonialsSection() {
   return (
-    <section className="py-8 sm:py-14 lg:py-20 bg-[#FBF9F5] text-gray-900 overflow-hidden border-t border-gray-200/70">
+    <section id="testimonials" className="py-8 sm:py-14 lg:py-20 bg-[#FBF9F5] text-gray-900 overflow-hidden border-t border-gray-200/70 scroll-mt-16 sm:scroll-mt-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-xl mx-auto mb-5 sm:mb-8 md:mb-12 space-y-1 sm:space-y-2">

@@ -7,6 +7,7 @@ import WelcomeSection from "@/components/home/WelcomeSection";
 import ServicesSection from "@/components/home/ServicesSection";
 import GalleryPreviewSection from "@/components/home/GalleryPreviewSection";
 import MenuSection from "@/components/home/MenuSection";
+import FaqSection from "@/components/home/FaqSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import CtaSection from "@/components/home/CtaSection";
 import QuoteModal from "@/components/ui/QuoteModal";
@@ -60,7 +61,10 @@ export default function Home() {
         onOpenQuote={handleOpenQuote}
       />
 
-      {/* 6. Editorial Testimonials */}
+      {/* 6. Frequently Asked Questions */}
+      <FaqSection onOpenQuote={handleOpenQuote} />
+
+      {/* 7. Editorial Testimonials */}
       <TestimonialsSection />
 
       {/* 7. Final Cinematic Call-to-Action */}
