@@ -66,8 +66,7 @@ export default function ServicesSection({ onOpenQuote }: ServicesSectionProps) {
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Image
           src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=2000&q=80"
-          alt=""
-          role="presentation"
+          alt="Culinary preparation background texture"
           fill
           className="object-cover object-center opacity-15 mix-blend-luminosity"
           sizes="100vw"

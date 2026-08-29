@@ -118,27 +118,17 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs text-gray-300">
               <li>
                 <Link href="/catering" className="hover:text-emerald-400 transition-colors font-medium text-emerald-300/90">
-                  Artisanal Catering →
+                  Catering Services →
                 </Link>
               </li>
               <li>
                 <Link href="/events" className="hover:text-emerald-400 transition-colors font-medium text-emerald-300/90">
-                  Events & Styling →
-                </Link>
-              </li>
-              <li>
-                <Link href="/catering" className="hover:text-emerald-400 transition-colors">
-                  Kerala Sadya Feasts
-                </Link>
-              </li>
-              <li>
-                <Link href="/catering" className="hover:text-emerald-400 transition-colors">
-                  Wedding Banquets
+                  Event Planning →
                 </Link>
               </li>
               <li>
                 <Link href="/#menu" className="hover:text-emerald-400 transition-colors">
-                  Custom Menu Builder
+                  Build Your Menu
                 </Link>
               </li>
             </ul>

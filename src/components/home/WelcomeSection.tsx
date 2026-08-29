@@ -59,7 +59,7 @@ export default function WelcomeSection() {
                 href="#services"
                 className="group inline-flex items-center text-[11px] sm:text-xs font-semibold tracking-[0.22em] uppercase text-emerald-800 hover:text-emerald-600 transition-colors cursor-pointer"
               >
-                <span>EXPLORE GREEN APPLE CATERING</span>
+                <span>EXPLORE OUR CATERING</span>
                 <ArrowRight className="w-3.5 h-3.5 ml-2 transform group-hover:translate-x-1.5 transition-transform" />
               </Link>
               <div className="flex-1 h-[1px] bg-gray-200" />
