@@ -5,14 +5,14 @@ import { siteConfig } from "@/data/site";
 const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Event Planning & Decoration in Kothamangalam | Green Apple",
+  title: "Event Planning & Decoration | Green Apple Kothamangalam",
   description:
     "Bespoke event planning, stage decoration, and celebration design in Kothamangalam. Weddings, birthday parties, and corporate events across Kerala.",
   alternates: {
     canonical: "/events",
   },
   openGraph: {
-    title: "Event Planning & Decoration in Kothamangalam | Green Apple",
+    title: "Event Planning & Decoration | Green Apple Kothamangalam",
     description:
       "Bespoke event planning, stage decoration, and celebration design in Kothamangalam. Weddings, birthday parties, and corporate events across Kerala.",
     url: `${siteUrl}/events`,
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Event Planning & Decoration in Kothamangalam | Green Apple",
+    title: "Event Planning & Decoration | Green Apple Kothamangalam",
     description:
       "Bespoke event planning, stage decoration, and celebration design in Kothamangalam. Weddings, birthday parties, and corporate events across Kerala.",
     images: [

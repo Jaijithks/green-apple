@@ -31,7 +31,7 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Green Apple Catering & Event Company | Kothamangalam, Kerala",
+    default: "Green Apple Catering & Events | Kothamangalam",
     template: `%s | ${siteConfig.fullName}`,
   },
   description:
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     email: false,
   },
   openGraph: {
-    title: "Green Apple Catering & Event Company | Kothamangalam, Kerala",
+    title: "Green Apple Catering & Events | Kothamangalam",
     description:
       "Green Apple Catering & Event Company in Kothamangalam, Kerala. Wedding catering, custom menus, event decoration and celebrations across Ernakulam, Idukki & Kottayam.",
     url: siteUrl,
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Green Apple Catering & Event Company | Kothamangalam, Kerala",
+    title: "Green Apple Catering & Events | Kothamangalam",
     description:
       "Green Apple Catering & Event Company in Kothamangalam, Kerala. Wedding catering, custom menus, event decoration and celebrations across Ernakulam, Idukki & Kottayam.",
     images: [

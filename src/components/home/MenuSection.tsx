@@ -81,78 +81,86 @@ export default function MenuSection({
         </div>
 
         {/* ======================================================== */}
-        {/* MOBILE VIEW: Single card with arrow navigation */}
+        {/* UNIFIED SERVICE CARDS (Responsive 3-Col Desktop + Mobile Interactive Switcher) */}
         {/* ======================================================== */}
-        <div className="block md:hidden max-w-md mx-auto">
-          {/* Card Container */}
-          <div
-            onClick={onOpenMenuBuilder}
-            className="group relative rounded-2xl overflow-hidden border border-white/15 bg-white/5 shadow-xl cursor-pointer flex flex-col justify-between transition-all duration-300 active:scale-[0.99]"
-          >
-            {/* Card Image */}
-            <div className="relative h-48 w-full overflow-hidden">
-              <Image
-                src={activeStyle.image}
-                alt={`${activeStyle.title} catering style - ${activeStyle.subtitle}`}
-                fill
-                className="object-cover transition-transform duration-500"
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#09281E] via-black/35 to-transparent" />
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {SERVICE_STYLES.map((style, idx) => {
+              const isMobileActive = idx === activeMobileIndex;
+              return (
+                <div
+                  key={style.id}
+                  onClick={onOpenMenuBuilder}
+                  className={`${
+                    isMobileActive ? "flex" : "hidden md:flex"
+                  } group relative rounded-2xl md:rounded-3xl overflow-hidden border border-white/15 bg-white/5 hover:border-emerald-400/50 shadow-xl transition-all duration-300 cursor-pointer flex-col justify-between active:scale-[0.99]`}
+                >
+                  {/* Card Image */}
+                  <div className="relative h-48 md:h-56 w-full overflow-hidden">
+                    <Image
+                      src={style.image}
+                      alt={`${style.title} catering style - ${style.subtitle}`}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#09281E] via-black/35 to-transparent" />
 
-              <div className="absolute top-3 left-3">
-                <span className="px-2.5 py-1 rounded-full text-[9px] font-semibold tracking-wider uppercase bg-black/60 text-emerald-300 border border-white/20 backdrop-blur-md">
-                  {activeStyle.badge}
-                </span>
-              </div>
+                    <div className="absolute top-3 left-3">
+                      <span className="px-2.5 py-1 rounded-full text-[9px] font-semibold tracking-wider uppercase bg-black/60 text-emerald-300 border border-white/20 backdrop-blur-md">
+                        {style.badge}
+                      </span>
+                    </div>
 
-              {/* Floating Left Arrow */}
-              <button
-                onClick={handlePrev}
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-[#229938] text-white border border-white/25 flex items-center justify-center backdrop-blur-md shadow-lg transition-all cursor-pointer z-20 active:scale-90"
-                aria-label="Previous service style"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
+                    {/* Mobile Navigation Arrows (Visible only on mobile) */}
+                    <button
+                      onClick={handlePrev}
+                      className="md:hidden absolute left-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-[#229938] text-white border border-white/25 flex items-center justify-center backdrop-blur-md shadow-lg transition-all cursor-pointer z-20 active:scale-90"
+                      aria-label="Previous service style"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
 
-              {/* Floating Right Arrow */}
-              <button
-                onClick={handleNext}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-[#229938] text-white border border-white/25 flex items-center justify-center backdrop-blur-md shadow-lg transition-all cursor-pointer z-20 active:scale-90"
-                aria-label="Next service style"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
+                    <button
+                      onClick={handleNext}
+                      className="md:hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-[#229938] text-white border border-white/25 flex items-center justify-center backdrop-blur-md shadow-lg transition-all cursor-pointer z-20 active:scale-90"
+                      aria-label="Next service style"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </div>
 
-            {/* Card Details */}
-            <div className="p-4 space-y-2.5 flex-1 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between">
-                  <h3 className="font-serif text-xl text-white font-normal">
-                    {activeStyle.title}
-                  </h3>
-                  <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-semibold">
-                    0{activeMobileIndex + 1} / 0{SERVICE_STYLES.length}
-                  </span>
+                  {/* Card Details */}
+                  <div className="p-4 md:p-5 lg:p-6 space-y-2.5 md:space-y-3 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-serif text-xl md:text-2xl text-white font-normal group-hover:text-emerald-300 transition-colors">
+                          {style.title}
+                        </h3>
+                        <span className="md:hidden text-[10px] uppercase tracking-widest text-emerald-400 font-semibold">
+                          0{idx + 1} / 0{SERVICE_STYLES.length}
+                        </span>
+                      </div>
+                      <span className="text-[10.5px] md:text-[11px] text-emerald-400 font-medium block mt-0.5">
+                        {style.subtitle}
+                      </span>
+                      <p className="text-xs text-gray-300 font-light mt-1.5 leading-relaxed">
+                        {style.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-2.5 md:pt-3 border-t border-white/10 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-emerald-400 group-hover:text-emerald-300">
+                      <span>Customize {style.title}</span>
+                      <ChevronRight className="w-3.5 h-3.5 md:w-4 md:h-4 transform group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
                 </div>
-                <span className="text-[10.5px] text-emerald-400 font-medium block mt-0.5">
-                  {activeStyle.subtitle}
-                </span>
-                <p className="text-xs text-gray-300 font-light mt-1.5 leading-relaxed">
-                  {activeStyle.description}
-                </p>
-              </div>
-
-              <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-emerald-400">
-                <span>Customize {activeStyle.title}</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </div>
-            </div>
+              );
+            })}
           </div>
 
-          {/* Dots Navigation Bar on Mobile */}
-          <div className="flex items-center justify-center space-x-2 pt-3">
+          {/* Dots Navigation Bar (Mobile only) */}
+          <div className="flex md:hidden items-center justify-center space-x-2 pt-3">
             {SERVICE_STYLES.map((st, idx) => {
               const isActive = idx === activeMobileIndex;
               return (
@@ -169,56 +177,6 @@ export default function MenuSection({
               );
             })}
           </div>
-        </div>
-
-        {/* ======================================================== */}
-        {/* DESKTOP VIEW: 3-Column Grid */}
-        {/* ======================================================== */}
-        <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
-          {SERVICE_STYLES.map((style) => (
-            <div
-              key={style.id}
-              onClick={onOpenMenuBuilder}
-              className="group relative rounded-3xl overflow-hidden border border-white/15 bg-white/5 hover:border-emerald-400/50 shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between"
-            >
-              {/* Card Image */}
-              <div className="relative h-56 w-full overflow-hidden">
-                <Image
-                  src={style.image}
-                  alt={`${style.title} catering style - ${style.subtitle}`}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                  sizes="33vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#09281E] via-black/35 to-transparent" />
-                <div className="absolute top-3 left-3">
-                  <span className="px-2.5 py-1 rounded-full text-[9px] font-semibold tracking-wider uppercase bg-black/60 text-emerald-300 border border-white/20 backdrop-blur-md">
-                    {style.badge}
-                  </span>
-                </div>
-              </div>
-
-              {/* Card Details */}
-              <div className="p-5 lg:p-6 space-y-3 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-serif text-2xl text-white font-normal group-hover:text-emerald-300 transition-colors">
-                    {style.title}
-                  </h3>
-                  <span className="text-[11px] text-emerald-400 font-medium block mt-0.5">
-                    {style.subtitle}
-                  </span>
-                  <p className="text-xs text-gray-300 font-light mt-1.5 leading-relaxed">
-                    {style.description}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-emerald-400 group-hover:text-emerald-300">
-                  <span>Customize {style.title}</span>
-                  <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </section>

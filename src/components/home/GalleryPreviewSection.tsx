@@ -213,38 +213,20 @@ export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewPro
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-10 sm:mb-14">
-          {/* Desktop Header: Left title, right description with bottom border */}
-          <div className="hidden lg:flex items-end justify-between pb-8 border-b border-gray-200/80">
+          <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between text-center lg:text-left lg:pb-8 lg:border-b lg:border-gray-200/80">
             <div>
-              <div className="flex items-center space-x-2.5 mb-2.5">
+              <div className="flex items-center justify-center lg:justify-start space-x-2.5 mb-2 sm:mb-2.5">
                 <span className="w-5 h-[1.5px] bg-[#229938]" />
-                <span className="text-xs tracking-[0.28em] uppercase text-emerald-800 font-semibold">
+                <span className="text-[10.5px] lg:text-xs tracking-[0.28em] uppercase text-emerald-800 font-semibold">
                   OUR GALLERY
                 </span>
                 <span className="w-5 h-[1.5px] bg-[#229938]" />
               </div>
-              <h2 className="font-serif text-4xl lg:text-[46px] font-normal text-gray-900 tracking-tight leading-none">
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-[46px] font-normal text-gray-900 tracking-tight leading-tight lg:leading-none">
                 Moments That Matter
               </h2>
             </div>
-            <p className="text-sm text-gray-600 font-light max-w-sm leading-relaxed text-left">
-              A collection of beautiful memories we&apos;ve had the honor to be part of.
-            </p>
-          </div>
-
-          {/* Mobile Header: Centered */}
-          <div className="flex lg:hidden flex-col items-center text-center">
-            <div className="flex items-center space-x-2.5 mb-2">
-              <span className="w-5 h-[1.5px] bg-[#229938]" />
-              <span className="text-[10.5px] tracking-[0.28em] uppercase text-emerald-800 font-semibold">
-                OUR GALLERY
-              </span>
-              <span className="w-5 h-[1.5px] bg-[#229938]" />
-            </div>
-            <h2 className="font-serif text-3xl sm:text-4xl font-normal text-gray-900 tracking-tight">
-              Moments That Matter
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-600 font-light max-w-xs sm:max-w-sm mt-2 leading-relaxed">
+            <p className="text-xs sm:text-sm text-gray-600 font-light max-w-xs sm:max-w-sm mt-2 lg:mt-0 leading-relaxed text-center lg:text-left">
               A collection of beautiful memories we&apos;ve had the honor to be part of.
             </p>
           </div>
@@ -339,29 +321,15 @@ export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewPro
         {/* Bottom CTA Button & Delicate Leaf Divider Ornament */}
         <div className="mt-10 sm:mt-14 flex flex-col items-center text-center">
           {galleryMedia.length > 0 && (
-            <>
-              {/* Desktop Outlined Pill CTA */}
-              <a
-                href="https://www.instagram.com/_green_apple_catering_/?hl=en"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden lg:inline-flex items-center px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-[0.2em] text-emerald-800 border border-emerald-800/80 hover:bg-emerald-800 hover:text-white transition-all duration-300 shadow-xs cursor-pointer group"
-              >
-                <span>VIEW FULL GALLERY</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-2 transform group-hover:translate-x-1 transition-transform" />
-              </a>
-
-              {/* Mobile Solid Dark Green Pill CTA */}
-              <a
-                href="https://www.instagram.com/_green_apple_catering_/?hl=en"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex lg:hidden items-center justify-center w-full max-w-xs px-8 py-3.5 rounded-full text-xs font-semibold uppercase tracking-[0.18em] bg-[#072018] text-white hover:bg-[#0E362A] transition-all shadow-md active:scale-95 cursor-pointer group"
-              >
-                <span>VIEW FULL GALLERY</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-2 transform group-hover:translate-x-1 transition-transform" />
-              </a>
-            </>
+            <a
+              href="https://www.instagram.com/_green_apple_catering_/?hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center w-full max-w-xs lg:w-auto px-8 py-3.5 lg:py-3 rounded-full text-xs font-semibold uppercase tracking-[0.18em] lg:tracking-[0.2em] bg-[#072018] lg:bg-transparent text-white lg:text-emerald-800 border border-transparent lg:border-emerald-800/80 hover:bg-[#0E362A] lg:hover:bg-emerald-800 lg:hover:text-white transition-all duration-300 shadow-md lg:shadow-xs active:scale-95 cursor-pointer group"
+            >
+              <span>VIEW FULL GALLERY</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-2 transform group-hover:translate-x-1 transition-transform" />
+            </a>
           )}
 
           {/* Delicate Botanical Leaf Divider Icon */}
