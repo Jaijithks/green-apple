@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Volume2, VolumeX, Play, X, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { InstagramIcon } from "@/components/ui/Icons";
 
 export interface GalleryMediaItem {
   id: string;
@@ -12,8 +12,6 @@ export interface GalleryMediaItem {
   poster?: string;
   alt: string;
 }
-
-
 
 // Video Tile Component with Lazy Autoplay & In-tile Mute Toggle
 function VideoTile({
@@ -253,33 +251,31 @@ export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewPro
         </div>
 
         {/* Dynamic Gallery Content */}
-        {loading ? (
+        {loading && galleryMedia.length === 0 ? (
           <div className="py-16 text-center text-gray-400 text-xs">
             Loading gallery showcases...
           </div>
         ) : galleryMedia.length === 0 ? (
-          <div className="py-16 px-6 text-center max-w-lg mx-auto bg-white/70 border border-emerald-900/10 rounded-3xl space-y-4 shadow-sm">
+          <div className="py-14 sm:py-16 px-6 text-center max-w-lg mx-auto bg-white/70 border border-emerald-900/10 rounded-3xl space-y-4 shadow-sm">
             <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-[#229938] flex items-center justify-center mx-auto shadow-xs">
-              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
-                <circle cx="9" cy="9" r="2"/>
-                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-              </svg>
+              <InstagramIcon className="w-7 h-7" />
             </div>
             <div>
-              <h3 className="font-serif text-2xl text-gray-900 font-normal">The gallery is empty</h3>
+              <h3 className="font-serif text-2xl text-gray-900 font-normal">Gallery is experiencing issues</h3>
               <p className="text-xs text-gray-500 font-light mt-1 max-w-sm mx-auto leading-relaxed">
-                Photos and video showcases will appear here once added in the CMS admin dashboard.
+                We are experiencing technical issues loading our gallery showcases. Please explore our Instagram to view our latest setups, dishes, and event memories.
               </p>
             </div>
             <div className="pt-1">
-              <Link
-                href="/admin/gallery"
-                className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#072018] text-white hover:bg-[#0E362A] transition-all shadow-md active:scale-95 cursor-pointer"
+              <a
+                href="https://www.instagram.com/_green_apple_catering_/?hl=en"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-2 px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#072018] text-white hover:bg-[#0E362A] transition-all shadow-md active:scale-95 cursor-pointer"
               >
-                <span>Add Photos & Videos</span>
+                <span>Explore Our Instagram</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </a>
             </div>
           </div>
         ) : (
@@ -342,27 +338,31 @@ export default function GalleryPreviewSection({ onOpenQuote }: GalleryPreviewPro
 
         {/* Bottom CTA Button & Delicate Leaf Divider Ornament */}
         <div className="mt-10 sm:mt-14 flex flex-col items-center text-center">
-          {/* Desktop Outlined Pill CTA */}
-          <a
-            href="https://www.instagram.com/_green_apple_catering_/?hl=en"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden lg:inline-flex items-center px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-[0.2em] text-emerald-800 border border-emerald-800/80 hover:bg-emerald-800 hover:text-white transition-all duration-300 shadow-xs cursor-pointer group"
-          >
-            <span>VIEW FULL GALLERY</span>
-            <ArrowRight className="w-3.5 h-3.5 ml-2 transform group-hover:translate-x-1 transition-transform" />
-          </a>
+          {galleryMedia.length > 0 && (
+            <>
+              {/* Desktop Outlined Pill CTA */}
+              <a
+                href="https://www.instagram.com/_green_apple_catering_/?hl=en"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden lg:inline-flex items-center px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-[0.2em] text-emerald-800 border border-emerald-800/80 hover:bg-emerald-800 hover:text-white transition-all duration-300 shadow-xs cursor-pointer group"
+              >
+                <span>VIEW FULL GALLERY</span>
+                <ArrowRight className="w-3.5 h-3.5 ml-2 transform group-hover:translate-x-1 transition-transform" />
+              </a>
 
-          {/* Mobile Solid Dark Green Pill CTA */}
-          <a
-            href="https://www.instagram.com/_green_apple_catering_/?hl=en"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex lg:hidden items-center justify-center w-full max-w-xs px-8 py-3.5 rounded-full text-xs font-semibold uppercase tracking-[0.18em] bg-[#072018] text-white hover:bg-[#0E362A] transition-all shadow-md active:scale-95 cursor-pointer group"
-          >
-            <span>VIEW FULL GALLERY</span>
-            <ArrowRight className="w-3.5 h-3.5 ml-2 transform group-hover:translate-x-1 transition-transform" />
-          </a>
+              {/* Mobile Solid Dark Green Pill CTA */}
+              <a
+                href="https://www.instagram.com/_green_apple_catering_/?hl=en"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex lg:hidden items-center justify-center w-full max-w-xs px-8 py-3.5 rounded-full text-xs font-semibold uppercase tracking-[0.18em] bg-[#072018] text-white hover:bg-[#0E362A] transition-all shadow-md active:scale-95 cursor-pointer group"
+              >
+                <span>VIEW FULL GALLERY</span>
+                <ArrowRight className="w-3.5 h-3.5 ml-2 transform group-hover:translate-x-1 transition-transform" />
+              </a>
+            </>
+          )}
 
           {/* Delicate Botanical Leaf Divider Icon */}
           <div className="flex items-center justify-center space-x-3 mt-6 sm:mt-8">
