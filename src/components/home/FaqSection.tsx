@@ -13,53 +13,32 @@ interface FaqItem {
 
 const FAQ_ITEMS: FaqItem[] = [
   {
-    id: "faq-1",
-    question: "What types of events and occasions do you cater for?",
+    id: "faq-hours",
+    question: "What are your working hours and availability?",
     answer:
-      "We provide end-to-end catering and event dining for all special occasions across Kerala. This includes grand wedding receptions, traditional engagement ceremonies, corporate banquets & galas, birthday milestones, housewarmings, traditional Sadya feasts, and private intimate VIP gatherings.",
-    category: "Services",
+      "We are available 24/7 for enquiries, consultations, and event bookings via phone call and WhatsApp.",
+    category: "Availability",
   },
   {
-    id: "faq-2",
-    question: "Can we fully customize our event menu?",
+    id: "faq-locations",
+    question: "Which locations and districts do you provide catering in?",
     answer:
-      "Yes, completely! You can tailor every dish to your preference or dietary needs. We specialize in authentic Kerala Sadya, Malabar cuisines, North Indian delicacies, Continental, Chinese, Arabian grills, gourmet live counters (chaat, pasta, grills, appam/dosa), and handcrafted dessert spreads.",
-    category: "Menu",
-  },
-  {
-    id: "faq-3",
-    question: "How far in advance should we reserve our booking?",
-    answer:
-      "For weddings and peak wedding season dates (September through May), we recommend booking 2 to 4 months in advance to secure your preferred date. For corporate banquets, birthdays, and smaller functions, 2 to 3 weeks prior notice is generally sufficient, subject to date availability.",
-    category: "Booking",
-  },
-  {
-    id: "faq-4",
-    question: "Do you provide service staff, crockery, and live buffet setups?",
-    answer:
-      "Yes! Green Apple offers a complete dining experience. We provide premium chafing units, elegant chinaware, glassware, cutlery, bespoke themed buffet presentation, live culinary cooking stations, and professionally groomed, courteous service personnel.",
-    category: "Logistics",
-  },
-  {
-    id: "faq-5",
-    question: "What is your minimum and maximum guest capacity?",
-    answer:
-      "We accommodate gatherings of all scales — from intimate private family dinners of 30–50 guests to massive wedding receptions of 3,000+ attendees, ensuring the exact same consistency of taste, food temperature, and graceful hospitality.",
-    category: "Capacity",
-  },
-  {
-    id: "faq-6",
-    question: "Do you offer food tasting sessions before finalizing our menu?",
-    answer:
-      "Yes! For confirmed wedding banquets and large corporate events, we are happy to arrange a dedicated food tasting session during the menu consultation phase to fine-tune flavours and presentation exactly to your expectations.",
-    category: "Menu",
-  },
-  {
-    id: "faq-7",
-    question: "Which locations and districts do you serve across Kerala?",
-    answer:
-      "Based in Kothamangalam, Ernakulam, we regularly travel across all central and southern Kerala districts including Kochi, Muvattupuzha, Idukki, Thrissur, Kottayam, Alappuzha, and neighboring regions.",
+      "Based in Kothamangalam, Ernakulam, we provide catering and event management services across Kothamangalam, Ernakulam, Idukki, Kottayam, and neighboring districts throughout Kerala.",
     category: "Locations",
+  },
+  {
+    id: "faq-events",
+    question: "What kinds of events and occasions do you cater for?",
+    answer:
+      "We cater for all celebrations across Kerala, including grand wedding banquets, traditional engagement ceremonies, birthday milestones, corporate galas & conferences, authentic Kerala Sadya feasts, housewarmings, and intimate VIP social gatherings.",
+    category: "Events",
+  },
+  {
+    id: "faq-customize",
+    question: "Can we fully customize our event menu and service style?",
+    answer:
+      "Yes, completely! You can personalize every dish and counter to your preference—spanning authentic Kerala Sadya, Malabar specialties, North Indian, Continental, Arabian grills, interactive live cooking stalls (dosa, chaat, grills), and handcrafted desserts.",
+    category: "Menu",
   },
 ];
 
@@ -74,11 +53,28 @@ export default function FaqSection({ onOpenQuote }: FaqSectionProps) {
     setOpenIndex((prev) => (prev === index ? null : index));
   };
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <section
       id="faq"
       className="py-14 sm:py-20 lg:py-24 bg-[#F7F5EF] text-gray-900 overflow-hidden border-t border-gray-200/70 scroll-mt-16 sm:scroll-mt-20"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-xl mx-auto mb-10 sm:mb-14 space-y-2 sm:space-y-3">

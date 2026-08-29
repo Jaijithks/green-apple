@@ -23,7 +23,7 @@ const TESTIMONIALS = [
   {
     id: "t3",
     quote:
-      "From the initial menu consultation to the evening reception, Green Apple exceeded all our expectations. The dum biryani and live fish counters were the absolute highlight!",
+      "From the initial menu consultation to the evening reception, Green Apple exceeded all our expectations. The Dum Biryani and live fish counters were the absolute highlight!",
     author: "Sujith & Anjali",
     event: "Engagement Banquet, Muvattupuzha",
     rating: 5,

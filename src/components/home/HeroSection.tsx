@@ -15,7 +15,7 @@ const HERO_SLIDES = [
   {
     id: "slide-weddings",
     url: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=85",
-    alt: "Green Apple Catering Grand Wedding Banquet and Floral Ambiance",
+    alt: "Green Apple Catering luxury wedding banquet and floral ambience in Kothamangalam, Kerala",
     tag: "KOTHAMANGALAM, KERALA",
     title: "Weddings",
     subtitle: "Bespoke feasts for your once-in-a-lifetime celebration",
@@ -23,7 +23,7 @@ const HERO_SLIDES = [
   {
     id: "slide-catering",
     url: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=2000&q=85",
-    alt: "Green Apple Catering chefs plating artisanal gourmet appetizers on long platters",
+    alt: "Artisanal catering buffet with gourmet appetizers and starters prepared by Green Apple chefs",
     tag: "ARTISANAL FLAVOURS",
     title: "Catering",
     subtitle: "Thoughtfully crafted menus for memorable gatherings",
@@ -31,7 +31,7 @@ const HERO_SLIDES = [
   {
     id: "slide-celebrations",
     url: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=2000&q=85",
-    alt: "Green Apple Gourmet Hospitality and Celebration Event",
+    alt: "Celebration event dining and warm hospitality setup in Kerala by Green Apple",
     tag: "SIGNATURE EVENTS",
     title: "Celebrations",
     subtitle: "Unforgettable moments curated with warm Kerala hospitality",
@@ -66,6 +66,9 @@ export default function HeroSection({ onOpenQuote, onOpenMenuBuilder }: HeroSect
 
   return (
     <section className="w-full pt-0 sm:pt-4 px-0 sm:px-4 md:px-7 lg:px-8 max-w-[1536px] mx-auto">
+      {/* Semantic H1 for Homepage SEO */}
+      <h1 className="sr-only">Catering & Events in Kothamangalam, Kerala</h1>
+
       {/* Tall Grand Editorial Hero Container (Square flush top on mobile, rounded bottom for About card overlap) */}
       <div
         className="relative w-full h-[680px] sm:h-[700px] lg:h-[730px] min-h-[680px] rounded-t-none rounded-b-[32px] sm:rounded-b-none sm:rounded-t-[40px] md:rounded-t-[46px] overflow-hidden shadow-2xl flex flex-col justify-between select-none"
@@ -111,10 +114,13 @@ export default function HeroSection({ onOpenQuote, onOpenMenuBuilder }: HeroSect
             <span className="w-5 h-[1.5px] bg-[#229938]" />
           </div>
 
-          {/* Grand Cursive Script Title */}
-          <h1 className="font-script text-[64px] sm:text-8xl md:text-9xl lg:text-[110px] text-white font-normal drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)] tracking-normal transform -rotate-1 leading-none py-1 select-none">
+          {/* Grand Cursive Script Visual Title */}
+          <span
+            aria-hidden="true"
+            className="font-script text-[64px] sm:text-8xl md:text-9xl lg:text-[110px] text-white font-normal drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)] tracking-normal transform -rotate-1 leading-none py-1 select-none block"
+          >
             {slide.title}
-          </h1>
+          </span>
 
           {/* Subtitle */}
           <p className="font-serif italic text-lg sm:text-2xl md:text-3xl text-white/95 tracking-wide max-w-[300px] sm:max-w-xl mx-auto mt-2 sm:mt-1 drop-shadow-md font-light leading-snug">

@@ -18,7 +18,7 @@ export default function WelcomeSection() {
           <div className="w-full lg:w-[38%] relative h-[260px] sm:h-[300px] lg:h-full rounded-[16px] sm:rounded-[18px] lg:rounded-none overflow-hidden bg-[#072018] flex-shrink-0 mb-5 lg:mb-0">
             <Image
               src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1000&q=85"
-              alt="Green Apple Catering Artisanal Gourmet Culinary Preparation and Presentation"
+              alt="Green Apple Catering artisanal gourmet culinary preparation in Kothamangalam, Kerala"
               fill
               className="object-cover object-center hover:scale-104 transition-transform duration-700 ease-out"
               sizes="(max-width: 1024px) 94vw, 38vw"
@@ -42,13 +42,13 @@ export default function WelcomeSection() {
                 is Served with Flavour.
               </h2>
 
-              {/* Editorial Narrative Copy */}
+              {/* Editorial Narrative Copy with Natural Service Area statement */}
               <div className="space-y-3 text-[13px] sm:text-[14px] text-gray-600 font-light leading-[1.75] pt-0.5 sm:pt-1">
                 <p>
-                  Based in Kothamangalam, Kerala, <strong>Green Apple Catering & Event Company</strong> is dedicated to crafting memorable celebration experiences through thoughtful food, catering, and event presentation.
+                  <strong>Green Apple Catering & Event Company</strong> provides catering and event services in Kothamangalam and across Ernakulam, Idukki and Kottayam.
                 </p>
                 <p>
-                  From grand wedding banquets and engagement feasts to corporate galas and private social gatherings, we bring warmth, flawless hospitality, and exceptional flavour to your special moments.
+                  From weddings and traditional celebrations to corporate gatherings and private events, we create catering and event experiences tailored to each occasion with warmth, flawless hospitality, and exceptional flavour.
                 </p>
               </div>
             </div>
@@ -59,7 +59,7 @@ export default function WelcomeSection() {
                 href="#services"
                 className="group inline-flex items-center text-[11px] sm:text-xs font-semibold tracking-[0.22em] uppercase text-emerald-800 hover:text-emerald-600 transition-colors cursor-pointer"
               >
-                <span>DISCOVER OUR STORY</span>
+                <span>EXPLORE GREEN APPLE CATERING</span>
                 <ArrowRight className="w-3.5 h-3.5 ml-2 transform group-hover:translate-x-1.5 transition-transform" />
               </Link>
               <div className="flex-1 h-[1px] bg-gray-200" />

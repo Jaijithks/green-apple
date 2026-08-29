@@ -160,11 +160,27 @@ export default function Footer() {
                 <span>Near Shobana English Medium Public School, Kothamangalam, Kerala 686691</span>
               </a>
 
+              <div className="pt-0.5">
+                <a
+                  href={siteConfig.social.location}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-[11px] text-emerald-400 hover:text-emerald-300 transition-colors font-medium"
+                >
+                  <span>Get Directions on Google Maps →</span>
+                </a>
+              </div>
+
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <a href={`tel:${siteConfig.contact.phonePrimary}`} className="hover:text-emerald-300 transition-colors font-medium">
-                  +91 {siteConfig.contact.phonePrimary}
+                <a href={`tel:${siteConfig.contact.phonePrimary.replace(/\s+/g, '')}`} className="hover:text-emerald-300 transition-colors font-medium">
+                  {siteConfig.contact.phonePrimary}
                 </a>
+              </div>
+
+              {/* 24/7 Availability Notice */}
+              <div className="text-[11px] text-emerald-300/90 font-medium">
+                • {siteConfig.availability}
               </div>
 
               <div className="flex items-center space-x-2 pt-0.5 text-[11px] text-emerald-300/90">
@@ -179,7 +195,7 @@ export default function Footer() {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-md transition-all hover:scale-102"
+                  className="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-md transition-all hover:scale-102 cursor-pointer"
                 >
                   <WhatsAppSolidIcon className="w-3.5 h-3.5 mr-1.5" />
                   <span>WhatsApp Us</span>

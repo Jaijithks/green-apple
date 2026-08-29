@@ -15,9 +15,10 @@ const TWO_SERVICES = [
     title: "Catering",
     category: "SIGNATURE FEASTS",
     description: "Thoughtfully crafted multi-cuisine menus for memorable celebrations.",
-    linkText: "EXPLORE CATERING",
+    linkText: "EXPLORE CATERING SERVICES",
     href: "/catering",
     image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1200&q=85",
+    alt: "Luxury multi-cuisine buffet catering setup with gourmet chafing dishes in Kothamangalam",
     objectPosition: "object-center",
   },
   {
@@ -25,9 +26,10 @@ const TWO_SERVICES = [
     title: "Events",
     category: "EVENTS & EXPERIENCES",
     description: "End-to-end event planning and execution that bring your vision to life.",
-    linkText: "EXPLORE EVENTS",
+    linkText: "EXPLORE EVENT PLANNING",
     href: "/events",
     image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=85",
+    alt: "Evening celebration banquet table setting with warm lighting and floral decoration in Kerala",
     objectPosition: "object-center",
   },
 ];
@@ -64,7 +66,8 @@ export default function ServicesSection({ onOpenQuote }: ServicesSectionProps) {
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Image
           src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=2000&q=80"
-          alt="Dark culinary texture background"
+          alt=""
+          role="presentation"
           fill
           className="object-cover object-center opacity-15 mix-blend-luminosity"
           sizes="100vw"
@@ -109,7 +112,7 @@ export default function ServicesSection({ onOpenQuote }: ServicesSectionProps) {
                 {/* Service Imagery */}
                 <Image
                   src={service.image}
-                  alt={service.title}
+                  alt={service.alt || service.title}
                   fill
                   className={`object-cover ${service.objectPosition} group-hover:scale-105 transition-transform duration-700 ease-out`}
                   sizes="(max-width: 768px) 50vw, 50vw"

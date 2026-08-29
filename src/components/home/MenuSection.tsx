@@ -93,7 +93,7 @@ export default function MenuSection({
             <div className="relative h-48 w-full overflow-hidden">
               <Image
                 src={activeStyle.image}
-                alt={activeStyle.title}
+                alt={`${activeStyle.title} catering style - ${activeStyle.subtitle}`}
                 fill
                 className="object-cover transition-transform duration-500"
                 sizes="(max-width: 768px) 100vw, 33vw"
@@ -185,7 +185,7 @@ export default function MenuSection({
               <div className="relative h-56 w-full overflow-hidden">
                 <Image
                   src={style.image}
-                  alt={style.title}
+                  alt={`${style.title} catering style - ${style.subtitle}`}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                   sizes="33vw"
