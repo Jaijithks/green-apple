@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import {
   Plus,
   Search,
@@ -16,18 +15,22 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
+  Tag,
 } from "lucide-react";
-import ImageUploader from "@/components/admin/ImageUploader";
+import { FoodTypeBadge } from "@/components/menu/MenuBuilderModal";
+import { FoodTypeId } from "@/data/menuBuilderData";
 
 interface MenuItem {
   _id: string;
   name: string;
+  malayalamName?: string;
   slug: string;
   category: string;
+  foodType?: FoodTypeId;
   description: string;
   price: number;
   currency: string;
-  image: string;
+  image?: string;
   cloudinaryPublicId?: string;
   isPopular: boolean;
   isSignature: boolean;
@@ -49,13 +52,31 @@ export default function AdminMenuPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStyle, setSelectedStyle] = useState("all");
+  const [selectedType, setSelectedType] = useState("all");
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    malayalamName: string;
+    category: string;
+    foodType: FoodTypeId;
+    description: string;
+    price: number;
+    currency: string;
+    image: string;
+    cloudinaryPublicId: string;
+    isPopular: boolean;
+    isSignature: boolean;
+    serviceStyles: string[];
+    sortOrder: number;
+    isActive: boolean;
+  }>({
     name: "",
+    malayalamName: "",
     category: "",
+    foodType: "veg",
     description: "",
     price: 150,
     currency: "₹",
@@ -105,11 +126,13 @@ export default function AdminMenuPage() {
     setEditingItem(null);
     setFormData({
       name: "",
-      category: categories[0]?.slug || "starters",
+      malayalamName: "",
+      category: categories[0]?.slug || "welcome-drinks",
+      foodType: "veg",
       description: "",
       price: 150,
       currency: "₹",
-      image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+      image: "",
       cloudinaryPublicId: "",
       isPopular: false,
       isSignature: false,
@@ -124,11 +147,13 @@ export default function AdminMenuPage() {
     setEditingItem(item);
     setFormData({
       name: item.name,
+      malayalamName: item.malayalamName || "",
       category: item.category,
+      foodType: item.foodType || "veg",
       description: item.description || "",
       price: item.price || 0,
       currency: item.currency || "₹",
-      image: item.image,
+      image: item.image || "",
       cloudinaryPublicId: item.cloudinaryPublicId || "",
       isPopular: item.isPopular,
       isSignature: item.isSignature,
@@ -223,11 +248,14 @@ export default function AdminMenuPage() {
       selectedCategory === "all" || item.category === selectedCategory;
     const matchesStyle =
       selectedStyle === "all" || item.serviceStyles?.includes(selectedStyle);
+    const matchesType =
+      selectedType === "all" || (item.foodType || "veg") === selectedType;
     const matchesSearch =
       searchQuery.trim() === "" ||
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.malayalamName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesStyle && matchesSearch;
+    return matchesCategory && matchesStyle && matchesType && matchesSearch;
   });
 
   return (
@@ -250,91 +278,137 @@ export default function AdminMenuPage() {
         </div>
       )}
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Header bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 sm:p-6 rounded-3xl border border-gray-200/80 shadow-xs">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-            Menu Items Management
+          <span className="text-[10px] uppercase tracking-widest text-emerald-700 font-bold block">
+            MENU MANAGEMENT
+          </span>
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5">
+            Catering Dishes & Menu Catalog
           </h1>
-          <p className="text-xs sm:text-sm text-gray-500 font-light mt-0.5">
-            Create, edit, price and manage dish availability across catering service styles
+          <p className="text-xs text-gray-500 font-light mt-1">
+            Manage your dishes with dietary indicators (Veg, Non-Veg, Seafood, Beverages, Live Counters) — no images required.
           </p>
         </div>
 
         <button
           onClick={handleOpenAddModal}
-          className="px-4 py-2.5 bg-[#229938] hover:bg-[#1c822e] text-white rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center space-x-2 shadow-md shadow-emerald-950/20 transition-all hover:scale-102 active:scale-98 cursor-pointer"
+          className="px-5 py-2.5 bg-[#229938] hover:bg-[#1c822e] text-white rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center space-x-2 shadow-md shadow-emerald-950/20 cursor-pointer self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Menu Item</span>
+          <span>Add New Dish</span>
         </button>
       </div>
 
-      {/* Filters Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex flex-col md:flex-row items-center gap-3">
-        {/* Search */}
-        <div className="relative flex-1 w-full">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search dishes by name or ingredient..."
-            className="w-full pl-10 pr-4 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 bg-gray-50/50"
-          />
+      {/* Filter & Search Bar */}
+      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-gray-200/80 shadow-xs space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          {/* Search */}
+          <div className="relative">
+            <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search dishes or Malayalam names..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-3.5 py-2 text-xs border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+            />
+          </div>
+
+          {/* Category Filter */}
+          <div>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full px-3.5 py-2 text-xs border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white font-medium capitalize"
+            >
+              <option value="all">All Categories ({categories.length})</option>
+              {categories.map((cat) => (
+                <option key={cat.slug} value={cat.slug}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Food Type Filter */}
+          <div>
+            <select
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              className="w-full px-3.5 py-2 text-xs border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white font-medium capitalize"
+            >
+              <option value="all">All Food Types</option>
+              <option value="veg">Vegetarian (VEG)</option>
+              <option value="non-veg">Non-Vegetarian (NON-VEG)</option>
+              <option value="seafood">Seafood / Fish</option>
+              <option value="beverage">Beverage / Drinks</option>
+              <option value="dessert">Desserts & Sweets</option>
+              <option value="live">Live Stations</option>
+            </select>
+          </div>
+
+          {/* Style Filter */}
+          <div>
+            <select
+              value={selectedStyle}
+              onChange={(e) => setSelectedStyle(e.target.value)}
+              className="w-full px-3.5 py-2 text-xs border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white font-medium capitalize"
+            >
+              <option value="all">All Service Styles</option>
+              <option value="buffet">Buffet</option>
+              <option value="table-service">Table Service</option>
+              <option value="sadya">Sadya</option>
+            </select>
+          </div>
         </div>
 
-        {/* Category Filter */}
-        <div className="flex items-center space-x-2 w-full md:w-auto">
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full md:w-44 px-3 py-2 text-xs border border-gray-200 rounded-xl bg-white focus:outline-none focus:border-emerald-500 font-medium text-gray-700"
-          >
-            <option value="all">All Categories ({items.length})</option>
-            {categories.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-
-          {/* Service Style Filter */}
-          <select
-            value={selectedStyle}
-            onChange={(e) => setSelectedStyle(e.target.value)}
-            className="w-full md:w-36 px-3 py-2 text-xs border border-gray-200 rounded-xl bg-white focus:outline-none focus:border-emerald-500 font-medium text-gray-700"
-          >
-            <option value="all">All Styles</option>
-            <option value="buffet">Buffet</option>
-            <option value="table-service">Table Service</option>
-            <option value="sadya">Sadya</option>
-          </select>
+        <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100 font-medium">
+          <span>
+            Showing <strong className="text-gray-900">{filteredItems.length}</strong> of{" "}
+            {items.length} items
+          </span>
+          {(searchQuery || selectedCategory !== "all" || selectedStyle !== "all" || selectedType !== "all") && (
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategory("all");
+                setSelectedStyle("all");
+                setSelectedType("all");
+              }}
+              className="text-emerald-700 hover:underline cursor-pointer"
+            >
+              Reset Filters
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Items Table */}
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-xs overflow-hidden">
+      {/* Items Table (with Type Badges, no image dependency) */}
+      <div className="bg-white rounded-3xl border border-gray-200/80 shadow-xs overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-gray-500 flex flex-col items-center justify-center space-y-2">
-            <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+          <div className="p-12 text-center text-gray-400">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto text-emerald-600 mb-2" />
             <span className="text-xs">Loading menu items...</span>
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="p-12 text-center text-gray-500 space-y-2">
-            <p className="text-sm font-medium text-gray-700">No menu items found</p>
-            <p className="text-xs text-gray-400">
-              Try adjusting your search query or add a new menu item.
-            </p>
+          <div className="p-12 text-center text-gray-400 space-y-3">
+            <p className="text-xs">No menu items found matching your criteria.</p>
+            <button
+              onClick={handleOpenAddModal}
+              className="px-4 py-2 bg-[#229938] text-white rounded-xl text-xs font-semibold cursor-pointer"
+            >
+              Create First Item
+            </button>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-gray-50/80 border-b border-gray-200 text-gray-600 font-semibold uppercase tracking-wider text-[10.5px]">
+              <thead className="bg-gray-50/75 border-b border-gray-200 text-gray-600 uppercase font-semibold text-[10px] tracking-wider">
                 <tr>
-                  <th className="py-3.5 px-4">Dish</th>
+                  <th className="py-3.5 px-4">Dish & Type Indicator</th>
                   <th className="py-3.5 px-4">Category</th>
-                  <th className="py-3.5 px-4">Price</th>
                   <th className="py-3.5 px-4">Dining Styles</th>
                   <th className="py-3.5 px-4 text-center">Status</th>
                   <th className="py-3.5 px-4 text-right">Actions</th>
@@ -348,48 +422,40 @@ export default function AdminMenuPage() {
                       !item.isActive ? "opacity-60 bg-gray-50/40" : ""
                     }`}
                   >
-                    {/* Dish & thumbnail */}
-                    <td className="py-3 px-4">
+                    {/* Dish & Food Type Badge */}
+                    <td className="py-3.5 px-4">
                       <div className="flex items-center space-x-3">
-                        <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200">
-                          <Image
-                            src={item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=200&q=80"}
-                            alt={item.name}
-                            fill
-                            className="object-cover"
-                            sizes="48px"
-                          />
-                        </div>
+                        <FoodTypeBadge type={item.foodType || "veg"} />
                         <div>
-                          <div className="font-semibold text-gray-900 text-xs sm:text-sm flex items-center space-x-1.5">
+                          <div className="font-semibold text-gray-900 text-xs sm:text-sm flex items-center space-x-1.5 flex-wrap">
                             <span>{item.name}</span>
+                            {item.malayalamName && (
+                              <span className="text-[11px] text-emerald-700 font-medium">
+                                ({item.malayalamName})
+                              </span>
+                            )}
                             {item.isSignature && (
                               <span className="text-[9.5px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded">
                                 Signature
                               </span>
                             )}
                           </div>
-                          <p className="text-[11px] text-gray-500 font-light line-clamp-1 max-w-xs">
-                            {item.description || "No description provided"}
+                          <p className="text-[11px] text-gray-500 font-light line-clamp-1 max-w-sm">
+                            {item.description || "No description"}
                           </p>
                         </div>
                       </div>
                     </td>
 
                     {/* Category */}
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       <span className="inline-block px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-[11px] font-medium capitalize">
                         {item.category.replace(/-/g, " ")}
                       </span>
                     </td>
 
-                    {/* Price */}
-                    <td className="py-3 px-4 font-semibold text-gray-900">
-                      {item.currency}{item.price}
-                    </td>
-
                     {/* Dining styles badges */}
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       <div className="flex flex-wrap gap-1">
                         {item.serviceStyles?.map((s) => (
                           <span
@@ -403,7 +469,7 @@ export default function AdminMenuPage() {
                     </td>
 
                     {/* Status Active toggle */}
-                    <td className="py-3 px-4 text-center">
+                    <td className="py-3.5 px-4 text-center">
                       <button
                         onClick={() => handleToggleActive(item)}
                         className={`inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10.5px] font-semibold cursor-pointer transition-colors ${
@@ -427,21 +493,21 @@ export default function AdminMenuPage() {
                     </td>
 
                     {/* Actions */}
-                    <td className="py-3 px-4 text-right">
-                      <div className="inline-flex items-center space-x-1.5">
+                    <td className="py-3.5 px-4 text-right">
+                      <div className="inline-flex items-center space-x-1">
                         <button
                           onClick={() => handleOpenEditModal(item)}
-                          className="p-1.5 text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
-                          title="Edit item"
+                          className="p-1.5 text-gray-500 hover:text-emerald-700 rounded-lg hover:bg-emerald-50 transition-colors cursor-pointer"
+                          title="Edit Dish"
                         >
-                          <Edit2 className="w-4 h-4" />
+                          <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDeleteItem(item._id, item.name)}
-                          className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-                          title="Delete item"
+                          className="p-1.5 text-gray-500 hover:text-red-700 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                          title="Delete Dish"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </td>
@@ -453,14 +519,19 @@ export default function AdminMenuPage() {
         )}
       </div>
 
-      {/* Add / Edit Modal */}
+      {/* Add / Edit Dish Modal (No Image Upload Required) */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
-          <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden my-8">
+          <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden my-8 animate-fadeIn">
             <div className="p-5 sm:p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-              <h3 className="font-bold text-gray-900 text-base sm:text-lg">
-                {editingItem ? `Edit "${editingItem.name}"` : "Add New Menu Item"}
-              </h3>
+              <div>
+                <h3 className="font-bold text-gray-900 text-base sm:text-lg">
+                  {editingItem ? `Edit "${editingItem.name}"` : "Add New Menu Item"}
+                </h3>
+                <span className="text-[11px] text-gray-500">
+                  Select the dietary type badge and details — no image required.
+                </span>
+              </div>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="p-1.5 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 cursor-pointer"
@@ -470,23 +541,81 @@ export default function AdminMenuPage() {
             </div>
 
             <form onSubmit={handleSaveItem} className="p-5 sm:p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+              {/* FOOD TYPE SELECTOR (VEG, NON-VEG, SEAFOOD, DRINK, DESSERT, LIVE) */}
+              <div className="space-y-1.5 bg-gray-50/80 p-3.5 rounded-2xl border border-gray-200">
+                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider">
+                  Select Food Item Type *
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                  {[
+                    { id: "veg", label: "Vegetarian", desc: "Green Dot" },
+                    { id: "non-veg", label: "Non-Veg", desc: "Red Dot" },
+                    { id: "seafood", label: "Seafood / Fish", desc: "Cyan Indicator" },
+                    { id: "beverage", label: "Live Drink / Beverage", desc: "Drink Badge" },
+                    { id: "dessert", label: "Dessert / Sweet", desc: "Dessert Badge" },
+                    { id: "live", label: "Live Station / Stall", desc: "Live Badge" },
+                  ].map((ft) => {
+                    const isCur = formData.foodType === ft.id;
+                    return (
+                      <button
+                        key={ft.id}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, foodType: ft.id as FoodTypeId })}
+                        className={`p-2.5 rounded-xl text-left border flex items-center justify-between cursor-pointer transition-all ${
+                          isCur
+                            ? "border-emerald-600 bg-white ring-2 ring-emerald-500/30 shadow-xs"
+                            : "border-gray-200 bg-white hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <FoodTypeBadge type={ft.id as FoodTypeId} compact={true} />
+                          <div>
+                            <span className="text-xs font-bold text-gray-900 block leading-tight">
+                              {ft.label}
+                            </span>
+                          </div>
+                        </div>
+                        {isCur && <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Names */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Dish Name */}
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                    Dish Name *
+                    Dish Name (English) *
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Malabar Chicken Dum Biryani"
+                    placeholder="e.g. Duck Mappas, Beef Peralan"
                     className="w-full px-3.5 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                   />
                 </div>
 
-                {/* Category */}
+                {/* Malayalam Name (Optional) */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Malayalam Name (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.malayalamName}
+                    onChange={(e) => setFormData({ ...formData, malayalamName: e.target.value })}
+                    placeholder="e.g. ഉപ്പേരി, പാലട പായസം..."
+                    className="w-full px-3.5 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Category & Sort Order */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
                     Category *
@@ -503,41 +632,6 @@ export default function AdminMenuPage() {
                     ))}
                   </select>
                 </div>
-              </div>
-
-              {/* Description */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Description
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Short, delicious description for the menu..."
-                  className="w-full px-3.5 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
-                />
-              </div>
-
-              {/* Price & Currency */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                    Price
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">
-                      ₹
-                    </span>
-                    <input
-                      type="number"
-                      min={0}
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
-                      className="w-full pl-8 pr-3.5 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold"
-                    />
-                  </div>
-                </div>
 
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -550,6 +644,20 @@ export default function AdminMenuPage() {
                     className="w-full px-3.5 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                   />
                 </div>
+              </div>
+
+              {/* Description */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  Description
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="Appetizing description for the catering menu..."
+                  className="w-full px-3.5 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
               </div>
 
               {/* Service Styles Checkboxes */}
@@ -575,7 +683,7 @@ export default function AdminMenuPage() {
                 </div>
               </div>
 
-              {/* Signature / Popular / Active Toggles */}
+              {/* Signature & Active Toggles */}
               <div className="flex flex-wrap gap-4 pt-1 text-xs">
                 <label className="inline-flex items-center space-x-2 cursor-pointer">
                   <input
@@ -598,18 +706,6 @@ export default function AdminMenuPage() {
                 </label>
               </div>
 
-              {/* Image Uploader */}
-              <div className="pt-2">
-                <ImageUploader
-                  value={formData.image}
-                  onChange={(url, publicId) =>
-                    setFormData({ ...formData, image: url, cloudinaryPublicId: publicId || "" })
-                  }
-                  folder="green-apple/menu"
-                  label="Dish Image"
-                />
-              </div>
-
               {/* Submit Buttons */}
               <div className="pt-4 border-t border-gray-100 flex items-center justify-end space-x-3">
                 <button
@@ -630,7 +726,7 @@ export default function AdminMenuPage() {
                       <span>Saving...</span>
                     </>
                   ) : (
-                    <span>{editingItem ? "Update Item" : "Create Item"}</span>
+                    <span>{editingItem ? "Update Dish" : "Create Dish"}</span>
                   )}
                 </button>
               </div>

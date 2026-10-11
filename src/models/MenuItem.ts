@@ -2,12 +2,14 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IMenuItem extends Document {
   name: string;
+  malayalamName?: string;
   slug: string;
   category: string; // Slug reference to MenuCategory
+  foodType: "veg" | "non-veg" | "seafood" | "beverage" | "dessert" | "live";
   description?: string;
   price: number;
   currency: string;
-  image: string;
+  image?: string;
   cloudinaryPublicId?: string;
   isPopular: boolean;
   isSignature: boolean;
@@ -25,6 +27,10 @@ const MenuItemSchema = new Schema<IMenuItem>(
       required: [true, "Dish/Item name is required"],
       trim: true,
     },
+    malayalamName: {
+      type: String,
+      trim: true,
+    },
     slug: {
       type: String,
       required: true,
@@ -35,6 +41,11 @@ const MenuItemSchema = new Schema<IMenuItem>(
       type: String,
       required: [true, "Item category is required"],
       trim: true,
+    },
+    foodType: {
+      type: String,
+      enum: ["veg", "non-veg", "seafood", "beverage", "dessert", "live"],
+      default: "veg",
     },
     description: {
       type: String,
@@ -54,7 +65,7 @@ const MenuItemSchema = new Schema<IMenuItem>(
     image: {
       type: String,
       trim: true,
-      default: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+      default: "",
     },
     cloudinaryPublicId: {
       type: String,

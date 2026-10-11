@@ -29,6 +29,7 @@ import {
   MENU_CATEGORIES,
   MENU_ITEMS,
   ServiceStyleId,
+  FoodTypeId,
   MenuItem,
   CateringCounter,
   EventDetails,
@@ -51,7 +52,190 @@ const STEPS = [
   { id: 5, label: "ENQUIRE", short: "Enquire" },
 ];
 
-const STORAGE_KEY = "green_apple_catering_plan_v1";
+const STORAGE_KEY = "green_apple_catering_plan_v3";
+
+export function resolveFoodType(name: string, category: string, rawType?: string): FoodTypeId {
+  if (rawType && ["veg", "non-veg", "seafood", "beverage", "dessert", "live"].includes(rawType)) {
+    return rawType as FoodTypeId;
+  }
+  const lowerName = (name || "").toLowerCase();
+  const lowerCat = (category || "").toLowerCase();
+
+  if (
+    lowerName.includes("chicken") ||
+    lowerName.includes("beef") ||
+    lowerName.includes("pork") ||
+    lowerName.includes("duck") ||
+    lowerName.includes("mutton") ||
+    lowerName.includes("nuggets") ||
+    lowerName.includes("pops")
+  ) {
+    return "non-veg";
+  }
+
+  if (
+    lowerName.includes("fish") ||
+    lowerName.includes("meen") ||
+    lowerName.includes("prawn") ||
+    lowerName.includes("chemmin") ||
+    lowerName.includes("chemmeen") ||
+    lowerName.includes("vattichathu") ||
+    lowerName.includes("moilee") ||
+    lowerName.includes("moly")
+  ) {
+    return "seafood";
+  }
+
+  if (
+    lowerCat.includes("drink") ||
+    lowerCat.includes("beverage") ||
+    lowerName.includes("juice") ||
+    lowerName.includes("kulukki") ||
+    lowerName.includes("lime") ||
+    lowerName.includes("mojito") ||
+    lowerName.includes("water") ||
+    lowerName.includes("tea") ||
+    lowerName.includes("coffee")
+  ) {
+    return "beverage";
+  }
+
+  if (
+    lowerCat.includes("dessert") ||
+    lowerCat.includes("payasam") ||
+    lowerName.includes("ice cream") ||
+    lowerName.includes("pudding") ||
+    lowerName.includes("payasam") ||
+    lowerName.includes("halwa") ||
+    lowerName.includes("pastry") ||
+    lowerName.includes("cake") ||
+    lowerName.includes("jamun") ||
+    lowerName.includes("പാലട")
+  ) {
+    return "dessert";
+  }
+
+  if (
+    lowerCat.includes("thattukada") ||
+    lowerName.includes("dosa counter") ||
+    lowerName.includes("counter") ||
+    lowerName.includes("cart") ||
+    lowerName.includes("station")
+  ) {
+    return "live";
+  }
+
+  return "veg";
+}
+
+export function FoodTypeBadge({
+  type,
+  compact = false,
+}: {
+  type?: FoodTypeId;
+  compact?: boolean;
+}) {
+  switch (type) {
+    case "veg":
+      return compact ? (
+        <span
+          className="inline-flex items-center justify-center w-3.5 h-3.5 border border-emerald-500 rounded-[3px] p-[1.5px] flex-shrink-0 bg-black/40"
+          title="Vegetarian"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+        </span>
+      ) : (
+        <div className="flex items-center space-x-1.5 bg-emerald-950/70 border border-emerald-500/40 px-2 py-1 rounded-lg flex-shrink-0 shadow-xs">
+          <span className="w-3.5 h-3.5 border border-emerald-500 rounded-[3px] p-[1.5px] flex items-center justify-center flex-shrink-0 bg-black/50">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+          </span>
+          <span className="text-[10px] font-bold text-emerald-300 tracking-wider">VEG</span>
+        </div>
+      );
+
+    case "non-veg":
+      return compact ? (
+        <span
+          className="inline-flex items-center justify-center w-3.5 h-3.5 border border-rose-500 rounded-[3px] p-[1.5px] flex-shrink-0 bg-black/40"
+          title="Non-Vegetarian"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+        </span>
+      ) : (
+        <div className="flex items-center space-x-1.5 bg-rose-950/70 border border-rose-500/40 px-2 py-1 rounded-lg flex-shrink-0 shadow-xs">
+          <span className="w-3.5 h-3.5 border border-rose-500 rounded-[3px] p-[1.5px] flex items-center justify-center flex-shrink-0 bg-black/50">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+          </span>
+          <span className="text-[10px] font-bold text-rose-300 tracking-wider">NON-VEG</span>
+        </div>
+      );
+
+    case "seafood":
+      return compact ? (
+        <span
+          className="inline-flex items-center justify-center w-3.5 h-3.5 border border-cyan-400 rounded-[3px] p-[1.5px] flex-shrink-0 bg-black/40"
+          title="Seafood / Fish"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+        </span>
+      ) : (
+        <div className="flex items-center space-x-1.5 bg-cyan-950/70 border border-cyan-400/40 px-2 py-1 rounded-lg flex-shrink-0 shadow-xs">
+          <span className="w-3.5 h-3.5 border border-cyan-400 rounded-[3px] p-[1.5px] flex items-center justify-center flex-shrink-0 bg-black/50">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+          </span>
+          <span className="text-[10px] font-bold text-cyan-300 tracking-wider">SEAFOOD</span>
+        </div>
+      );
+
+    case "beverage":
+      return compact ? (
+        <span
+          className="inline-block w-2.5 h-2.5 rounded-full bg-indigo-400 flex-shrink-0"
+          title="Beverage / Live Drink"
+        />
+      ) : (
+        <div className="flex items-center space-x-1.5 bg-indigo-950/70 border border-indigo-400/40 px-2 py-1 rounded-lg flex-shrink-0 shadow-xs">
+          <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+          <span className="text-[10px] font-bold text-indigo-300 tracking-wider">DRINK</span>
+        </div>
+      );
+
+    case "dessert":
+      return compact ? (
+        <span
+          className="inline-block w-2.5 h-2.5 rounded-full bg-pink-400 flex-shrink-0"
+          title="Dessert & Sweets"
+        />
+      ) : (
+        <div className="flex items-center space-x-1.5 bg-pink-950/70 border border-pink-400/40 px-2 py-1 rounded-lg flex-shrink-0 shadow-xs">
+          <span className="w-1.5 h-1.5 rounded-full bg-pink-400" />
+          <span className="text-[10px] font-bold text-pink-300 tracking-wider">DESSERT</span>
+        </div>
+      );
+
+    case "live":
+      return compact ? (
+        <span
+          className="inline-block w-2.5 h-2.5 rounded-full bg-amber-400 flex-shrink-0"
+          title="Live Station"
+        />
+      ) : (
+        <div className="flex items-center space-x-1.5 bg-amber-950/70 border border-amber-400/40 px-2 py-1 rounded-lg flex-shrink-0 shadow-xs">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+          <span className="text-[10px] font-bold text-amber-300 tracking-wider">LIVE</span>
+        </div>
+      );
+
+    default:
+      return compact ? (
+        <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
+      ) : (
+        <div className="flex items-center space-x-1 bg-emerald-950/70 border border-emerald-500/40 px-2 py-0.5 rounded-lg">
+          <span className="text-[10px] font-bold text-emerald-300">ITEM</span>
+        </div>
+      );
+  }
+}
 
 export default function MenuBuilderModal({
   isOpen,
@@ -78,6 +262,7 @@ export default function MenuBuilderModal({
     guestCount: "",
     location: "",
     additionalNotes: "",
+    customRequestedDishes: "",
   });
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -117,7 +302,7 @@ export default function MenuBuilderModal({
   }, [initialPreset, isOpen]);
 
   useEffect(() => {
-    if (selectedItemIds.length > 0 || counters.length > 0) {
+    if (selectedItemIds.length > 0 || counters.length > 0 || eventDetails.customRequestedDishes) {
       try {
         localStorage.setItem(
           STORAGE_KEY,
@@ -145,9 +330,10 @@ export default function MenuBuilderModal({
           const mapped: MenuItem[] = data.data.map((item: any) => ({
             id: item.slug || item._id,
             name: item.name,
+            malayalamName: item.malayalamName,
             category: item.category,
+            foodType: resolveFoodType(item.name, item.category, item.foodType),
             description: item.description,
-            image: item.image,
             serviceStyles: item.serviceStyles,
             isSignature: item.isSignature || item.isPopular,
           }));
@@ -301,44 +487,44 @@ export default function MenuBuilderModal({
 
   const handleAutoOrganizeCounters = () => {
     const starterItems = selectedItems.filter((i) =>
-      ["welcome-drinks", "starters"].includes(i.category)
+      ["welcome-drinks", "snacks-starters"].includes(i.category)
     );
     const mainItems = selectedItems.filter((i) =>
-      ["mains", "rice", "sides"].includes(i.category)
+      ["curries-gravies", "rice-biryani", "meat-seafood-specials", "vegetable-sides"].includes(i.category)
     );
     const breadLiveItems = selectedItems.filter((i) =>
-      ["breads", "live-counters"].includes(i.category)
+      ["breads", "thattukada-live"].includes(i.category)
     );
     const dessertItems = selectedItems.filter((i) =>
-      ["desserts", "beverages"].includes(i.category)
+      ["desserts", "beverages-water"].includes(i.category)
     );
 
     const generated: CateringCounter[] = [];
     if (starterItems.length > 0) {
       generated.push({
         id: `counter-starters`,
-        name: "Welcome Drinks & Appetizer Lounge",
+        name: "Welcome Drinks & Snack Lounge",
         itemIds: starterItems.map((i) => i.id),
+      });
+    }
+    if (breadLiveItems.length > 0) {
+      generated.push({
+        id: `counter-breads-live`,
+        name: "Live Appams, Porattas & Thattukada Station",
+        itemIds: breadLiveItems.map((i) => i.id),
       });
     }
     if (mainItems.length > 0) {
       generated.push({
         id: `counter-mains`,
-        name: "Grand Main Feast & Biryani Station",
+        name: "Grand Feasts, Roasts & Biryani Counter",
         itemIds: mainItems.map((i) => i.id),
-      });
-    }
-    if (breadLiveItems.length > 0) {
-      generated.push({
-        id: `counter-breads`,
-        name: "Live Appam & Fresh Breads Station",
-        itemIds: breadLiveItems.map((i) => i.id),
       });
     }
     if (dessertItems.length > 0) {
       generated.push({
         id: `counter-desserts`,
-        name: "Artisanal Dessert & Sweet Counter",
+        name: "Artisanal Dessert & Chilled Sweet Corner",
         itemIds: dessertItems.map((i) => i.id),
       });
     }
@@ -360,18 +546,20 @@ export default function MenuBuilderModal({
     let msg = `*NEW CATERING ENQUIRY — GREEN APPLE*\n\n`;
     msg += `*Client:* ${eventDetails.fullName || "Valued Guest"}\n`;
     msg += `*Phone:* ${eventDetails.phone || "N/A"}\n`;
-    msg += `*Event:* ${eventDetails.eventType}\n`;
+    msg += `*Event:* ${eventDetails.eventType === "Other" ? eventDetails.customEventType || "Custom Occasion" : eventDetails.eventType}\n`;
     msg += `*Date:* ${eventDetails.eventDate || "TBD"}\n`;
     msg += `*Guests:* ${eventDetails.guestCount}\n`;
     msg += `*Location:* ${eventDetails.location}\n`;
-    msg += `*Style:* ${styleObj?.title || "Selected"}\n\n`;
-    msg += `*--- SELECTED MENU (${selectedItems.length}) ---*\n`;
+    msg += `*Style:* ${styleObj?.title || "Selected Style"}\n\n`;
+    msg += `*--- SELECTED MENU (${selectedItems.length} ITEMS) ---*\n`;
 
     Object.entries(selectedItemsByCategory).forEach(([catId, items]) => {
-      const catObj = MENU_CATEGORIES.find((c) => c.id === catId);
+      const catObj = allCategories.find((c: any) => c.id === catId);
       msg += `\n*${catObj?.name || catId.toUpperCase()}:*\n`;
       items.forEach((item) => {
-        msg += `• ${item.name}\n`;
+        const typeTag = item.foodType ? `[${item.foodType.toUpperCase()}] ` : "";
+        const malTag = item.malayalamName ? ` (${item.malayalamName})` : "";
+        msg += `• ${typeTag}${item.name}${malTag}\n`;
       });
     });
 
@@ -384,6 +572,11 @@ export default function MenuBuilderModal({
           msg += `  - ${ci.name}\n`;
         });
       });
+    }
+
+    if (eventDetails.customRequestedDishes && eventDetails.customRequestedDishes.trim()) {
+      msg += `\n*--- SPECIAL DISH ENQUIRIES (NOT LISTED IN MENU) ---*\n`;
+      msg += `${eventDetails.customRequestedDishes.trim()}\n`;
     }
 
     if (eventDetails.additionalNotes.trim()) {
@@ -415,6 +608,7 @@ export default function MenuBuilderModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-0 sm:p-3 md:p-4 overflow-hidden animate-fadeIn">
       <div className="relative w-full h-full sm:h-[95vh] sm:max-w-6xl bg-[#072018] border-0 sm:border border-white/15 sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden text-white">
         
+        {/* Header */}
         <header className="flex-shrink-0 px-3.5 sm:px-6 py-2.5 sm:py-3.5 bg-[#051812] border-b border-white/10 flex items-center justify-between z-20">
           <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#229938]/20 border border-[#229938]/60 flex items-center justify-center flex-shrink-0 shadow-inner">
@@ -449,66 +643,93 @@ export default function MenuBuilderModal({
             {selectedItems.length > 0 && (
               <button
                 onClick={() => setIsClearConfirmOpen(true)}
-                className="px-2.5 py-1 rounded-full bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-300 border border-white/10 hover:border-red-400/40 text-[10px] font-medium transition-all flex items-center space-x-1 cursor-pointer"
-                title="Clear all selected items and reset menu"
+                className="hidden sm:flex text-[11px] text-gray-400 hover:text-red-400 transition-colors cursor-pointer"
+                title="Reset all choices"
               >
-                <Trash2 className="w-3 h-3" />
-                <span className="hidden sm:inline">Clear</span>
+                Clear
               </button>
             )}
 
             <button
               onClick={onClose}
-              className="p-1.5 sm:p-2 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition-colors cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center"
-              aria-label="Close menu builder"
+              className="p-1.5 sm:p-2 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
+              aria-label="Close custom menu planner"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </header>
 
-        <nav className="flex-shrink-0 px-3 sm:px-6 py-2.5 bg-[#051812]/90 border-b border-white/10 overflow-x-auto no-scrollbar">
-          <div className="flex items-center justify-between max-w-2xl mx-auto min-w-[320px] px-1">
-            {STEPS.map((s, idx) => {
-              const isCurrent = currentStep === s.id;
-              const isCompleted = currentStep > s.id;
-              const isLast = idx === STEPS.length - 1;
+        {/* Clear confirmation alert banner */}
+        {isClearConfirmOpen && (
+          <div className="bg-red-950/80 border-b border-red-500/40 px-4 py-2 flex items-center justify-between text-xs text-red-200 z-30">
+            <div className="flex items-center space-x-2">
+              <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
+              <span>Are you sure you want to clear your selected menu and start fresh?</span>
+            </div>
+            <div className="flex items-center space-x-2 flex-shrink-0">
+              <button
+                onClick={handleClearAll}
+                className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md font-semibold cursor-pointer"
+              >
+                Yes, Clear
+              </button>
+              <button
+                onClick={() => setIsClearConfirmOpen(false)}
+                className="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-white rounded-md cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Multi-step progress bar */}
+        <div className="flex-shrink-0 bg-[#092219] border-b border-white/10 px-3 sm:px-6 py-2 overflow-x-auto no-scrollbar">
+          <div className="flex items-center justify-between min-w-[360px] sm:min-w-0 max-w-4xl mx-auto">
+            {STEPS.map((step, idx) => {
+              const isActive = currentStep === step.id;
+              const isPast = currentStep > step.id;
 
               return (
-                <React.Fragment key={s.id}>
+                <React.Fragment key={step.id}>
                   <button
-                    onClick={() => setCurrentStep(s.id)}
-                    className="flex flex-col items-center group cursor-pointer focus:outline-hidden"
+                    onClick={() => {
+                      if (isPast || (step.id === 2 && selectedServiceStyle)) {
+                        setCurrentStep(step.id);
+                      }
+                    }}
+                    className={`flex items-center space-x-1.5 sm:space-x-2 text-left cursor-pointer transition-colors ${
+                      isActive
+                        ? "text-emerald-400 font-bold"
+                        : isPast
+                        ? "text-gray-300 hover:text-white"
+                        : "text-gray-400 opacity-60"
+                    }`}
                   >
                     <div
-                      className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-[10px] sm:text-[11px] font-bold transition-all duration-200 ${
-                        isCurrent
-                          ? "bg-[#229938] text-white ring-2 ring-[#229938]/50 shadow-md shadow-emerald-950"
-                          : isCompleted
-                          ? "bg-emerald-950 text-emerald-300 border border-emerald-500/60"
-                          : "bg-white/10 text-gray-400 border border-white/15"
+                      className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold ${
+                        isActive
+                          ? "bg-[#229938] text-white shadow-md shadow-emerald-900"
+                          : isPast
+                          ? "bg-white/20 text-emerald-300"
+                          : "bg-white/10 text-gray-400"
                       }`}
                     >
-                      {isCompleted ? <Check className="w-3 h-3 text-emerald-300 stroke-[3]" /> : s.id}
+                      {isPast ? <Check className="w-3 h-3 stroke-[3]" /> : step.id}
                     </div>
-
-                    <span
-                      className={`text-[8.5px] sm:text-[9.5px] uppercase tracking-wider font-semibold mt-1 transition-colors text-center leading-tight ${
-                        isCurrent
-                          ? "text-emerald-400"
-                          : isCompleted
-                          ? "text-gray-300"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      {s.label}
+                    <span className="text-[10px] sm:text-xs uppercase tracking-wider hidden xs:inline">
+                      {step.short}
+                    </span>
+                    <span className="text-[11px] uppercase tracking-wider hidden sm:inline">
+                      {step.label}
                     </span>
                   </button>
 
-                  {!isLast && (
+                  {idx < STEPS.length - 1 && (
                     <div
-                      className={`flex-1 h-[1px] mx-1 sm:mx-2 transition-colors -mt-4 ${
-                        currentStep > s.id ? "bg-emerald-500/60" : "bg-white/15"
+                      className={`flex-1 mx-1.5 sm:mx-3 h-[1px] transition-colors ${
+                        currentStep > idx + 1 ? "bg-[#229938]" : "bg-white/15"
                       }`}
                     />
                   )}
@@ -516,16 +737,18 @@ export default function MenuBuilderModal({
               );
             })}
           </div>
-        </nav>
+        </div>
 
-        <div className="flex-1 flex overflow-hidden relative">
-          <main className="flex-1 overflow-y-auto px-3.5 sm:px-6 lg:px-8 py-3.5 sm:py-5 pb-28 sm:pb-8">
+        {/* Main Content Area */}
+        <div className="flex-1 flex overflow-hidden">
+          <main className="flex-1 overflow-y-auto p-3.5 sm:p-6 lg:p-7 pb-24 md:pb-7">
             
+            {/* STEP 1: SERVICE STYLE SELECTION */}
             {currentStep === 1 && (
               <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 animate-fadeIn">
-                <div className="text-center sm:text-left border-b border-white/10 pb-3">
+                <div className="border-b border-white/10 pb-3">
                   <span className="text-[9.5px] sm:text-[10.5px] uppercase tracking-[0.25em] text-emerald-400 font-semibold">
-                    STEP 01
+                    STEP 01 · DINING FORMAT
                   </span>
                   <h2 className="font-serif text-xl sm:text-3xl text-white font-normal mt-0.5">
                     Choose How Your Catering is Served
@@ -598,6 +821,7 @@ export default function MenuBuilderModal({
               </div>
             )}
 
+            {/* STEP 2: DISH SELECTION (NO IMAGES REQUIRED - CLEAN DIETARY INDICATORS) */}
             {currentStep === 2 && (
               <div className="max-w-4xl mx-auto space-y-3 sm:space-y-4 animate-fadeIn">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-2.5 gap-2">
@@ -623,6 +847,7 @@ export default function MenuBuilderModal({
                   </div>
                 </div>
 
+                {/* Sticky Category Pills */}
                 <div className="sticky top-0 z-10 bg-[#072018] py-1.5 -mx-3.5 px-3.5 sm:mx-0 sm:px-0">
                   <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 no-scrollbar">
                     {availableCategories.map((cat) => {
@@ -660,45 +885,50 @@ export default function MenuBuilderModal({
                   </p>
                 </div>
 
-                <div className="space-y-2.5 pt-1">
+                {/* Dish items list (with type indication badges, no images) */}
+                <div className="space-y-2 pt-1">
                   {categoryItems.map((item) => {
                     const isSelected = selectedItemIds.includes(item.id);
                     return (
                       <div
                         key={item.id}
                         onClick={() => handleToggleItem(item.id)}
-                        className={`group relative rounded-2xl overflow-hidden border p-2.5 sm:p-3 transition-all duration-200 cursor-pointer flex items-center justify-between gap-3 ${
+                        className={`group relative rounded-2xl border p-3 sm:p-3.5 transition-all duration-200 cursor-pointer flex items-center justify-between gap-3 ${
                           isSelected
-                            ? "bg-[#092A20] border-[#229938] shadow-md"
+                            ? "bg-[#092A20] border-[#229938] shadow-md ring-1 ring-[#229938]/30"
                             : "bg-[#0A261D]/70 border-white/10 hover:border-white/20 hover:bg-[#0A261D]"
                         }`}
                       >
-                        <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden flex-shrink-0 bg-black/40">
-                          <Image
-                            src={item.image || "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=600&q=80"}
-                            alt={item.name}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            sizes="96px"
-                          />
+                        {/* Food Type Indicator Badge */}
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <FoodTypeBadge type={item.foodType} />
+
+                          <div className="flex-1 min-w-0 pr-1">
+                            <div className="flex items-center flex-wrap gap-1.5">
+                              <h3 className="font-serif text-base sm:text-lg text-white font-normal leading-snug group-hover:text-emerald-300 transition-colors">
+                                {item.name}
+                              </h3>
+                              {item.malayalamName && (
+                                <span className="text-xs text-emerald-400 font-medium font-sans">
+                                  ({item.malayalamName})
+                                </span>
+                              )}
+                              {item.isSignature && (
+                                <span className="inline-block px-1.5 py-0.5 rounded text-[8.5px] font-semibold tracking-wider uppercase bg-[#229938]/20 text-emerald-300 border border-[#229938]/40">
+                                  SIGNATURE
+                                </span>
+                              )}
+                            </div>
+
+                            {item.description && (
+                              <p className="text-xs text-gray-300 font-light mt-1 line-clamp-2 leading-relaxed">
+                                {item.description}
+                              </p>
+                            )}
+                          </div>
                         </div>
 
-                        <div className="flex-1 min-w-0 pr-1">
-                          <h3 className="font-serif text-base sm:text-lg text-white font-normal leading-snug group-hover:text-emerald-300 transition-colors">
-                            {item.name}
-                          </h3>
-
-                          {item.isSignature && (
-                            <span className="inline-block px-1.5 py-0.5 rounded text-[8.5px] font-semibold tracking-wider uppercase bg-[#229938]/20 text-emerald-300 border border-[#229938]/40 mt-1">
-                              SIGNATURE
-                            </span>
-                          )}
-
-                          <p className="text-xs text-gray-300 font-light mt-1 line-clamp-2 leading-relaxed">
-                            {item.description}
-                          </p>
-                        </div>
-
+                        {/* Checkbox toggle */}
                         <div className="flex-shrink-0 pl-1">
                           {isSelected ? (
                             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#229938] text-white flex items-center justify-center shadow-md">
@@ -713,6 +943,7 @@ export default function MenuBuilderModal({
                   })}
                 </div>
 
+                {/* Section navigation buttons */}
                 <div className="pt-5 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                   <button
                     onClick={handlePrevCategory}
@@ -728,7 +959,7 @@ export default function MenuBuilderModal({
                         onClick={handleNextCategory}
                         className="px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-emerald-300 border border-emerald-400/40 hover:border-emerald-400 transition-all flex items-center justify-center space-x-2 cursor-pointer min-h-[44px]"
                       >
-                        <span>NEXT SECTION: {nextCategory?.shortName || "NEXT"}</span>
+                        <span>NEXT: {nextCategory?.shortName || "NEXT"}</span>
                         <ArrowRight className="w-4 h-4" />
                       </button>
                     )}
@@ -737,13 +968,14 @@ export default function MenuBuilderModal({
                       onClick={() => setCurrentStep(3)}
                       className="px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-lg shadow-emerald-950/50 transition-all flex items-center justify-center space-x-2 cursor-pointer min-h-[44px]"
                     >
-                      <span>PROCEED →</span>
+                      <span>PROCEED TO STATIONS →</span>
                     </button>
                   </div>
                 </div>
               </div>
             )}
 
+            {/* STEP 3: COUNTERS & LAYOUT */}
             {currentStep === 3 && (
               <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 animate-fadeIn">
                 <div className="border-b border-white/10 pb-3">
@@ -759,7 +991,7 @@ export default function MenuBuilderModal({
                   </h2>
                   <p className="text-xs text-gray-300 font-light mt-1">
                     {selectedServiceStyle === "buffet"
-                      ? "Group your chosen dishes into physical stations (e.g. Welcome Drinks, Biryani Station, Live Counter, Desserts)."
+                      ? "Group your chosen dishes into physical stations (e.g. Welcome Drinks, Thattukada Station, Biryani Counter, Desserts)."
                       : selectedServiceStyle === "table-service"
                       ? "Your dishes will be served and replenished table-side by our hospitality team."
                       : "Items will be served in the authentic Kerala sequential order on fresh banana leaves."}
@@ -772,7 +1004,7 @@ export default function MenuBuilderModal({
                       <div className="flex-1 flex items-center space-x-2">
                         <input
                           type="text"
-                          placeholder="e.g. Live Grill Station, Dessert Lounge..."
+                          placeholder="e.g. Live Thattukada Station, Dessert Lounge..."
                           value={newCounterName}
                           onChange={(e) => setNewCounterName(e.target.value)}
                           onKeyDown={(e) => e.key === "Enter" && handleAddCounter()}
@@ -895,6 +1127,7 @@ export default function MenuBuilderModal({
               </div>
             )}
 
+            {/* STEP 4: REVIEW PLAN (INCLUDES SPECIAL DISH ENQUIRY) */}
             {currentStep === 4 && (
               <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 animate-fadeIn">
                 <div className="border-b border-white/10 pb-3 flex items-center justify-between">
@@ -967,7 +1200,7 @@ export default function MenuBuilderModal({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       {Object.entries(selectedItemsByCategory).map(([catId, items]) => {
-                        const catObj = MENU_CATEGORIES.find((c) => c.id === catId);
+                        const catObj = allCategories.find((c: any) => c.id === catId);
                         return (
                           <div
                             key={catId}
@@ -976,15 +1209,21 @@ export default function MenuBuilderModal({
                             <span className="text-[10.5px] uppercase tracking-wider text-emerald-300 font-semibold block border-b border-white/10 pb-1">
                               {catObj?.name || catId} ({items.length})
                             </span>
-                            <ul className="space-y-1">
+                            <ul className="space-y-1.5">
                               {items.map((it) => (
                                 <li
                                   key={it.id}
-                                  className="text-xs text-gray-200 flex items-center justify-between"
+                                  className="text-xs text-gray-200 flex items-center justify-between gap-2"
                                 >
-                                  <span>{it.name}</span>
+                                  <div className="flex items-center space-x-1.5 truncate">
+                                    <FoodTypeBadge type={it.foodType} compact={true} />
+                                    <span className="truncate">{it.name}</span>
+                                    {it.malayalamName && (
+                                      <span className="text-[11px] text-emerald-400/80">({it.malayalamName})</span>
+                                    )}
+                                  </div>
                                   {it.isSignature && (
-                                    <span className="text-[9px] text-emerald-400 italic">
+                                    <span className="text-[9px] text-emerald-400 italic flex-shrink-0">
                                       Signature
                                     </span>
                                   )}
@@ -1017,6 +1256,40 @@ export default function MenuBuilderModal({
                       </div>
                     </div>
                   )}
+
+                  {/* SPECIAL DISH ENQUIRY BOX (ITEMS NOT MENTIONED IN MENU) */}
+                  <div className="mt-4 pt-4 border-t border-white/10 bg-[#051812]/80 border border-emerald-500/30 rounded-2xl p-4 sm:p-5 space-y-2.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="text-[9.5px] uppercase tracking-widest text-emerald-400 font-bold block">
+                          BESPOKE CULINARY REQUESTS
+                        </span>
+                        <h4 className="font-serif text-base sm:text-lg text-white font-normal mt-0.5">
+                          Enquire about dishes not listed in our menu
+                        </h4>
+                        <p className="text-xs text-gray-300 font-light mt-0.5">
+                          Want specific heritage delicacies, meat roasts, live pasta/chaat counters, or family specialties? Specify them below and we will prepare a customized quotation.
+                        </p>
+                      </div>
+                      <Sparkles className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    </div>
+
+                    <textarea
+                      rows={2}
+                      placeholder="e.g. Rabbit Roast, Beef Ularthiyathu, Malabar Chemmeen Biryani, Live Pasta Counter, specific Kerala Payasam..."
+                      value={eventDetails.customRequestedDishes || ""}
+                      onChange={(e) =>
+                        setEventDetails({ ...eventDetails, customRequestedDishes: e.target.value })
+                      }
+                      className="w-full bg-black/50 border border-white/20 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-hidden focus:border-emerald-400 transition-colors"
+                    />
+                    {eventDetails.customRequestedDishes && eventDetails.customRequestedDishes.trim() && (
+                      <div className="text-[11px] text-emerald-300 bg-emerald-950/60 border border-emerald-500/30 rounded-lg px-3 py-1.5 flex items-center space-x-1.5">
+                        <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                        <span>Included in your WhatsApp inquiry summary.</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Bottom Navigation */}
@@ -1040,9 +1313,7 @@ export default function MenuBuilderModal({
               </div>
             )}
 
-            {/* ======================================================== */}
             {/* STEP 5: EVENT DETAILS & WHATSAPP ENQUIRY */}
-            {/* ======================================================== */}
             {currentStep === 5 && (
               <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6 animate-fadeIn">
                 <div className="border-b border-white/10 pb-3 sm:pb-4">
@@ -1129,15 +1400,14 @@ export default function MenuBuilderModal({
 
                     {/* Custom Event Type when Other is selected */}
                     {eventDetails.eventType === "Other" && (
-                      <div className="sm:col-span-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="sm:col-span-2">
                         <label className="block text-[11px] sm:text-xs uppercase tracking-wider text-emerald-400 font-medium mb-1">
                           Specify Your Occasion <span className="text-emerald-400">*</span>
                         </label>
                         <input
                           type="text"
                           required
-                          autoFocus
-                          placeholder="e.g. Housewarming, Anniversary, Baptism, Jubilee..."
+                          placeholder="e.g. Baptism, Jubilee, Engagement..."
                           value={eventDetails.customEventType || ""}
                           onChange={(e) =>
                             setEventDetails({ ...eventDetails, customEventType: e.target.value })
@@ -1209,6 +1479,26 @@ export default function MenuBuilderModal({
                     </div>
                   </div>
 
+                  {/* CUSTOM DISHES ENQUIRY FIELD */}
+                  <div>
+                    <label className="block text-[11px] sm:text-xs uppercase tracking-wider text-emerald-400 font-medium mb-1 flex items-center justify-between">
+                      <span>Enquire About Custom / New Food Items (Not in Menu)</span>
+                      <span className="text-[10px] text-gray-400 font-normal lowercase">(optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Rabbit Roast, Mutton Kuruma, Live Chaat Stall, Meen Pollichathu..."
+                      value={eventDetails.customRequestedDishes || ""}
+                      onChange={(e) =>
+                        setEventDetails({ ...eventDetails, customRequestedDishes: e.target.value })
+                      }
+                      className="w-full bg-black/40 border border-emerald-500/40 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-hidden focus:border-emerald-400 min-h-[44px]"
+                    />
+                    <span className="text-[10.5px] text-gray-400 mt-1 block font-light">
+                      Specify any specialty dishes or live counters you would like our catering team to quote for.
+                    </span>
+                  </div>
+
                   {/* Notes */}
                   <div>
                     <label className="block text-[11px] sm:text-xs uppercase tracking-wider text-gray-300 font-medium mb-1">
@@ -1216,7 +1506,7 @@ export default function MenuBuilderModal({
                     </label>
                     <textarea
                       rows={2}
-                      placeholder="Special dietary preferences, live counter ideas, decoration requests..."
+                      placeholder="Special dietary preferences, venue access times, decoration or service requests..."
                       value={eventDetails.additionalNotes}
                       onChange={(e) =>
                         setEventDetails({ ...eventDetails, additionalNotes: e.target.value })
@@ -1252,9 +1542,7 @@ export default function MenuBuilderModal({
             )}
           </main>
 
-          {/* ======================================================== */}
           {/* DESKTOP STICKY CATERING PLAN SIDEBAR */}
-          {/* ======================================================== */}
           <aside className="hidden md:flex w-80 lg:w-96 flex-col bg-[#051812] border-l border-white/10 p-5 lg:p-6 overflow-y-auto justify-between flex-shrink-0">
             <div className="space-y-4">
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
@@ -1271,7 +1559,7 @@ export default function MenuBuilderModal({
                 </span>
               </div>
 
-              {/* Selected List */}
+              {/* Selected List with Compact Dietary Indicator */}
               <div className="space-y-3 max-h-[48vh] overflow-y-auto pr-1">
                 {selectedItems.length === 0 ? (
                   <p className="text-xs text-gray-400 font-light italic py-4">
@@ -1279,7 +1567,7 @@ export default function MenuBuilderModal({
                   </p>
                 ) : (
                   Object.entries(selectedItemsByCategory).map(([catId, items]) => {
-                    const catObj = MENU_CATEGORIES.find((c) => c.id === catId);
+                    const catObj = allCategories.find((c: any) => c.id === catId);
                     return (
                       <div key={catId} className="space-y-1">
                         <span className="text-[10px] uppercase tracking-wider text-emerald-400/90 font-medium">
@@ -1291,7 +1579,10 @@ export default function MenuBuilderModal({
                               key={it.id}
                               className="text-xs text-gray-300 flex items-center justify-between bg-white/5 px-2.5 py-1.5 rounded-lg group"
                             >
-                              <span className="truncate pr-2">{it.name}</span>
+                              <div className="flex items-center space-x-1.5 truncate pr-2">
+                                <FoodTypeBadge type={it.foodType} compact={true} />
+                                <span className="truncate">{it.name}</span>
+                              </div>
                               <button
                                 onClick={() => handleToggleItem(it.id)}
                                 className="text-gray-400 hover:text-red-400 transition-colors"
@@ -1311,6 +1602,17 @@ export default function MenuBuilderModal({
                 <div className="pt-2 border-t border-white/10 text-xs text-gray-400 flex items-center justify-between">
                   <span>Planned Stations:</span>
                   <span className="font-semibold text-emerald-400">{counters.length} Counters</span>
+                </div>
+              )}
+
+              {eventDetails.customRequestedDishes && eventDetails.customRequestedDishes.trim() && (
+                <div className="pt-2 border-t border-white/10 text-xs">
+                  <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold block">
+                    Custom Dish Enquiries:
+                  </span>
+                  <p className="text-gray-300 line-clamp-2 italic text-[11px] mt-0.5">
+                    {eventDetails.customRequestedDishes}
+                  </p>
                 </div>
               )}
             </div>
@@ -1336,9 +1638,7 @@ export default function MenuBuilderModal({
           </aside>
         </div>
 
-        {/* ======================================================== */}
         {/* MOBILE STICKY FLOATING BOTTOM BAR & DRAWER */}
-        {/* ======================================================== */}
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#051812] border-t border-white/15 px-4 py-2.5 flex items-center justify-between shadow-2xl">
           <button
             onClick={() => setIsMobileDrawerOpen(!isMobileDrawerOpen)}
@@ -1392,7 +1692,7 @@ export default function MenuBuilderModal({
                 <p className="text-xs text-gray-400 font-light italic py-2">No dishes chosen yet.</p>
               ) : (
                 Object.entries(selectedItemsByCategory).map(([catId, items]) => {
-                  const catObj = MENU_CATEGORIES.find((c) => c.id === catId);
+                  const catObj = allCategories.find((c: any) => c.id === catId);
                   return (
                     <div key={catId} className="space-y-1">
                       <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold">
@@ -1404,7 +1704,10 @@ export default function MenuBuilderModal({
                             key={it.id}
                             className="text-xs text-gray-200 flex items-center justify-between bg-white/5 px-3 py-1.5 rounded-lg"
                           >
-                            <span className="truncate pr-2">{it.name}</span>
+                            <div className="flex items-center space-x-1.5 truncate pr-2">
+                              <FoodTypeBadge type={it.foodType} compact={true} />
+                              <span className="truncate">{it.name}</span>
+                            </div>
                             <button
                               onClick={() => handleToggleItem(it.id)}
                               className="text-gray-400 hover:text-red-400 p-1 cursor-pointer"
@@ -1444,4 +1747,3 @@ export default function MenuBuilderModal({
     </div>
   );
 }
-

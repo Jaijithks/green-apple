@@ -4,7 +4,6 @@ import { MenuCategory } from "@/models/MenuCategory";
 import { MenuItem } from "@/models/MenuItem";
 import { GalleryItem } from "@/models/GalleryItem";
 import { AdminUser } from "@/models/AdminUser";
-import { menuCategories as defaultCategories, menuItemsData as defaultMenuItems } from "@/data/menu";
 import { MENU_CATEGORIES as builderCategories, MENU_ITEMS as builderItems } from "@/data/menuBuilderData";
 
 const DEFAULT_GALLERY = [
@@ -97,97 +96,45 @@ export async function seedDatabase(force: boolean = false): Promise<{
     if (existingCatsCount === 0 || force) {
       if (force) await MenuCategory.deleteMany({});
 
-      // Combine builder categories and default categories
-      const combinedCategories = [
-        ...builderCategories.map((c, idx) => ({
-          name: c.name,
-          slug: c.id,
-          shortName: c.shortName,
-          number: c.number,
-          description: c.description || "",
-          serviceStyles: c.serviceStyles || ["buffet", "table-service", "sadya"],
-          sortOrder: idx + 1,
-          isActive: true,
-        })),
-      ];
+      const categoriesToInsert = builderCategories.map((c, idx) => ({
+        name: c.name,
+        slug: c.id,
+        shortName: c.shortName,
+        number: c.number,
+        description: c.description || "",
+        serviceStyles: c.serviceStyles || ["buffet", "table-service", "sadya"],
+        sortOrder: idx + 1,
+        isActive: true,
+      }));
 
-      // Ensure standard categories exist
-      for (const defCat of defaultCategories) {
-        if (!combinedCategories.some((c) => c.slug === defCat.id)) {
-          combinedCategories.push({
-            name: defCat.name,
-            slug: defCat.id,
-            shortName: defCat.name,
-            number: "0",
-            description: "",
-            serviceStyles: ["buffet", "table-service"],
-            sortOrder: combinedCategories.length + 1,
-            isActive: true,
-          });
-        }
-      }
-
-      await MenuCategory.insertMany(combinedCategories);
-      seededCats = combinedCategories.length;
+      await MenuCategory.insertMany(categoriesToInsert);
+      seededCats = categoriesToInsert.length;
     }
 
-    // 2. Seed Menu Items
+    // 2. Seed Menu Items (ONLY items from real catering programs)
     const existingItemsCount = await MenuItem.countDocuments();
     let seededItems = 0;
 
     if (existingItemsCount === 0 || force) {
       if (force) await MenuItem.deleteMany({});
 
-      const combinedItemsMap = new Map<string, any>();
+      const itemsToInsert = builderItems.map((item, idx) => ({
+        name: item.name,
+        malayalamName: item.malayalamName,
+        slug: item.id || item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        category: item.category,
+        foodType: item.foodType || "veg",
+        description: item.description || "",
+        price: 150,
+        currency: "₹",
+        image: "",
+        isPopular: !!item.isSignature,
+        isSignature: !!item.isSignature,
+        serviceStyles: item.serviceStyles || ["buffet", "table-service", "sadya"],
+        sortOrder: idx + 1,
+        isActive: true,
+      }));
 
-      // Load builder items
-      for (let i = 0; i < builderItems.length; i++) {
-        const item = builderItems[i];
-        combinedItemsMap.set(item.name.toLowerCase().trim(), {
-          name: item.name,
-          slug: item.id || item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-          category: item.category,
-          description: item.description || "",
-          price: 150, // Standard base price
-          currency: "₹",
-          image: item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
-          isPopular: !!item.isSignature,
-          isSignature: !!item.isSignature,
-          serviceStyles: item.serviceStyles || ["buffet", "table-service"],
-          sortOrder: i + 1,
-          isActive: true,
-        });
-      }
-
-      // Merge standard menu items
-      for (let j = 0; j < defaultMenuItems.length; j++) {
-        const item = defaultMenuItems[j];
-        const key = item.name.toLowerCase().trim();
-        if (combinedItemsMap.has(key)) {
-          const existing = combinedItemsMap.get(key);
-          existing.price = item.price;
-          existing.description = item.description || existing.description;
-          existing.image = item.image || existing.image;
-          existing.isPopular = item.isPopular ?? existing.isPopular;
-        } else {
-          combinedItemsMap.set(key, {
-            name: item.name,
-            slug: item.id || item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-            category: item.category,
-            description: item.description || "",
-            price: item.price || 150,
-            currency: item.currency || "₹",
-            image: item.image,
-            isPopular: !!item.isPopular,
-            isSignature: false,
-            serviceStyles: ["buffet", "table-service"],
-            sortOrder: combinedItemsMap.size + 1,
-            isActive: true,
-          });
-        }
-      }
-
-      const itemsToInsert = Array.from(combinedItemsMap.values());
       await MenuItem.insertMany(itemsToInsert);
       seededItems = itemsToInsert.length;
     }

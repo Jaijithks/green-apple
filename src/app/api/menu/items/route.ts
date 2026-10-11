@@ -3,7 +3,6 @@ import { connectToDatabase } from "@/lib/db";
 import { MenuItem } from "@/models/MenuItem";
 import { requireAdminAuth } from "@/lib/auth";
 import { MENU_ITEMS as fallbackBuilderItems } from "@/data/menuBuilderData";
-import { menuItemsData as fallbackMenuItems } from "@/data/menu";
 
 export async function GET(req: NextRequest) {
   try {
@@ -15,27 +14,24 @@ export async function GET(req: NextRequest) {
 
     const conn = await connectToDatabase();
     if (!conn) {
-      // Return combined fallback items
-      let items = fallbackBuilderItems.map((item, idx) => {
-        const matchingDefault = fallbackMenuItems.find(
-          (m) => m.name.toLowerCase() === item.name.toLowerCase()
-        );
-        return {
-          _id: item.id || `fb-${idx}`,
-          name: item.name,
-          slug: item.id || `item-${idx}`,
-          category: item.category,
-          description: item.description || matchingDefault?.description || "",
-          price: matchingDefault?.price || 150,
-          currency: matchingDefault?.currency || "₹",
-          image: item.image || matchingDefault?.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
-          isPopular: !!item.isSignature || !!matchingDefault?.isPopular,
-          isSignature: !!item.isSignature,
-          serviceStyles: item.serviceStyles || ["buffet", "table-service"],
-          sortOrder: idx + 1,
-          isActive: true,
-        };
-      });
+      // Return fallback items strictly from catering programs
+      let items = fallbackBuilderItems.map((item, idx) => ({
+        _id: item.id || `fb-${idx}`,
+        name: item.name,
+        malayalamName: item.malayalamName,
+        slug: item.id || `item-${idx}`,
+        category: item.category,
+        foodType: item.foodType || "veg",
+        description: item.description || "",
+        price: 150,
+        currency: "₹",
+        image: "",
+        isPopular: !!item.isSignature,
+        isSignature: !!item.isSignature,
+        serviceStyles: item.serviceStyles || ["buffet", "table-service", "sadya"],
+        sortOrder: idx + 1,
+        isActive: true,
+      }));
 
       if (category && category !== "all") {
         items = items.filter((it) => it.category === category);
@@ -78,12 +74,14 @@ export async function GET(req: NextRequest) {
         data: fallbackBuilderItems.map((item, idx) => ({
           _id: item.id || `fb-${idx}`,
           name: item.name,
+          malayalamName: item.malayalamName,
           slug: item.id || `item-${idx}`,
           category: item.category,
+          foodType: item.foodType || "veg",
           description: item.description || "",
           price: 150,
           currency: "₹",
-          image: item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+          image: "",
           isPopular: !!item.isSignature,
           isSignature: !!item.isSignature,
           serviceStyles: item.serviceStyles || ["buffet", "table-service"],
@@ -125,7 +123,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const {
       name,
+      malayalamName,
       category,
+      foodType,
       description,
       price,
       currency,
@@ -153,12 +153,14 @@ export async function POST(req: NextRequest) {
 
     const newItem = await MenuItem.create({
       name: name.trim(),
+      malayalamName: malayalamName?.trim() || undefined,
       slug: `${slug}-${Date.now().toString().slice(-4)}`,
       category: category.trim(),
+      foodType: foodType || "veg",
       description: description?.trim() || "",
       price: Number(price) || 0,
       currency: currency?.trim() || "₹",
-      image: image?.trim() || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+      image: image?.trim() || "",
       cloudinaryPublicId: cloudinaryPublicId?.trim() || undefined,
       isPopular: Boolean(isPopular),
       isSignature: Boolean(isSignature),

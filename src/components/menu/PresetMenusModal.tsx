@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { X, ArrowRight, Sparkles } from "lucide-react";
 import { PRESET_MENUS, PresetMenu, MENU_ITEMS } from "@/data/menuBuilderData";
+import { FoodTypeBadge } from "./MenuBuilderModal";
 
 interface PresetMenusModalProps {
   isOpen: boolean;
@@ -32,10 +33,10 @@ export default function PresetMenusModal({
             </div>
             <div>
               <span className="text-[9.5px] sm:text-[10px] tracking-[0.2em] uppercase text-emerald-400 font-semibold block">
-                CURATED COLLECTIONS
+                CURATED PACKAGES
               </span>
               <h2 className="font-serif text-base sm:text-2xl text-white font-normal leading-none mt-0.5">
-                Explore Preset Menus
+                Explore Catering Event Menus
               </h2>
             </div>
           </div>
@@ -56,7 +57,7 @@ export default function PresetMenusModal({
               Signature Menus Crafted by Master Chefs
             </h3>
             <p className="text-xs sm:text-sm text-gray-300 font-light leading-relaxed">
-              Choose an expertly curated celebration menu as your starting point. You can customize dishes, add live counters, and adjust serving styles in the builder.
+              Choose an expertly curated celebration menu from programs conducted by our catering team. Customize dishes, add live stations, or enquire about custom recipes in the builder.
             </p>
           </div>
 
@@ -67,15 +68,15 @@ export default function PresetMenusModal({
                 .filter(Boolean);
 
               const isExpanded = expandedPresetId === preset.id;
-              const displayItems = isExpanded ? itemsList : itemsList.slice(0, 5);
+              const displayItems = isExpanded ? itemsList : itemsList.slice(0, 6);
 
               return (
                 <div
                   key={preset.id}
                   className="group bg-[#0A261D] border border-white/15 rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between"
                 >
-                  {/* Photo Header */}
-                  <div className="relative h-44 sm:h-56 w-full overflow-hidden">
+                  {/* Header */}
+                  <div className="relative h-44 sm:h-52 w-full overflow-hidden">
                     <Image
                       src={preset.image}
                       alt={preset.name}
@@ -119,7 +120,7 @@ export default function PresetMenusModal({
                           <span className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
                             INCLUDED SPECIALTIES ({itemsList.length})
                           </span>
-                          {itemsList.length > 5 && (
+                          {itemsList.length > 6 && (
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -127,7 +128,7 @@ export default function PresetMenusModal({
                               }}
                               className="text-[10px] uppercase tracking-wider text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"
                             >
-                              {isExpanded ? "Show Less" : `+${itemsList.length - 5} More`}
+                              {isExpanded ? "Show Less" : `+${itemsList.length - 6} More`}
                             </button>
                           )}
                         </div>
@@ -136,9 +137,10 @@ export default function PresetMenusModal({
                           {displayItems.map((it) => (
                             <span
                               key={it?.id}
-                              className="px-2.5 py-1 rounded-lg text-[11px] bg-white/5 border border-white/10 text-gray-200"
+                              className="px-2 py-0.5 rounded-lg text-[11px] bg-white/5 border border-white/10 text-gray-200 inline-flex items-center space-x-1.5"
                             >
-                              {it?.name}
+                              <FoodTypeBadge type={it?.foodType} compact={true} />
+                              <span className="truncate">{it?.name}</span>
                             </span>
                           ))}
                         </div>
@@ -165,4 +167,3 @@ export default function PresetMenusModal({
     </div>
   );
 }
-
