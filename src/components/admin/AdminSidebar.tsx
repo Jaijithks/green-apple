@@ -12,6 +12,7 @@ import {
   ExternalLink,
   LogOut,
   Database,
+  BookOpen,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -37,6 +38,12 @@ export default function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
       label: "Dashboard",
       href: "/admin",
       icon: LayoutDashboard,
+      exact: true,
+    },
+    {
+      label: "Menu Cards (Slider)",
+      href: "/admin/menu-cards",
+      icon: BookOpen,
       exact: true,
     },
     {

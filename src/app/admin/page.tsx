@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
+  BookOpen,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -22,6 +23,7 @@ export default function AdminDashboardPage() {
     menuCount: 0,
     categoryCount: 0,
     galleryCount: 0,
+    menuCardsCount: 0,
     loading: true,
   });
 
@@ -41,17 +43,19 @@ export default function AdminDashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
-      const [menuRes, catRes, galRes, authRes] = await Promise.all([
+      const [menuRes, catRes, galRes, cardRes, authRes] = await Promise.all([
         fetch("/api/menu/items"),
         fetch("/api/menu/categories"),
         fetch("/api/gallery"),
+        fetch("/api/menu-cards"),
         fetch("/api/auth/me"),
       ]);
 
-      const [menuData, catData, galData, authData] = await Promise.all([
+      const [menuData, catData, galData, cardData, authData] = await Promise.all([
         menuRes.json(),
         catRes.json(),
         galRes.json(),
+        cardRes.json(),
         authRes.json(),
       ]);
 
@@ -59,6 +63,7 @@ export default function AdminDashboardPage() {
         menuCount: menuData.total || menuData.data?.length || 0,
         categoryCount: catData.data?.length || 0,
         galleryCount: galData.total || galData.data?.length || 0,
+        menuCardsCount: cardData.total || cardData.data?.length || 0,
         loading: false,
       });
 
@@ -213,7 +218,33 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* KPI Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        {/* Menu Cards (Explore Slider) */}
+        <Link
+          href="/admin/menu-cards"
+          className="bg-white p-5 sm:p-6 rounded-2xl border border-gray-200 shadow-xs hover:shadow-md hover:border-emerald-300 transition-all group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+              Menu Cards
+            </span>
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#229938] flex items-center justify-center group-hover:bg-[#229938] group-hover:text-white transition-colors">
+              <BookOpen className="w-5 h-5" />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-3xl font-bold text-gray-900 font-serif">
+              {stats.loading ? "..." : stats.menuCardsCount}
+            </div>
+            <p className="text-xs text-gray-500 font-light mt-1 flex items-center justify-between">
+              <span>Explore Menus Slider</span>
+              <span className="text-emerald-700 font-semibold group-hover:translate-x-0.5 transition-transform inline-flex items-center">
+                Manage <ArrowRight className="w-3 h-3 ml-1" />
+              </span>
+            </p>
+          </div>
+        </Link>
+
         {/* Menu Items Card */}
         <Link
           href="/admin/menu"
