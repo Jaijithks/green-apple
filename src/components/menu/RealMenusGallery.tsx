@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import {
   Sparkles,
@@ -11,6 +12,7 @@ import {
   X,
   Phone,
   ArrowRight,
+  ArrowLeft,
   Check,
   ChevronDown,
   ChevronUp,
@@ -39,11 +41,35 @@ export default function RealMenusGallery({
   const [selectedMenuIndex, setSelectedMenuIndex] = useState<number>(0);
   const [lightboxMenu, setLightboxMenu] = useState<RealMenu | null>(null);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [mounted, setMounted] = useState<boolean>(false);
   const [expandedCourses, setExpandedCourses] = useState<{ [key: string]: boolean }>({
     "course-0": true,
     "course-1": true,
     "course-2": true,
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!lightboxMenu) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleCloseLightbox();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [lightboxMenu]);
 
   const activeMenu = REAL_MENUS_DATA[selectedMenuIndex];
 
@@ -376,74 +402,90 @@ export default function RealMenusGallery({
       {/* ======================================================== */}
       {/* INTERACTIVE FULLSCREEN / ZOOM LIGHTBOX */}
       {/* ======================================================== */}
-      {lightboxMenu && (
+      {mounted && lightboxMenu && createPortal(
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-2 sm:p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md p-0 sm:p-4 animate-in fade-in duration-200"
           onClick={handleCloseLightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${lightboxMenu.title} full view`}
         >
           {/* Main Lightbox Container */}
           <div
-            className="relative w-full max-w-5xl h-[92vh] bg-[#072018] border border-white/20 rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden text-white"
+            className="relative w-full max-w-5xl h-[100dvh] sm:h-[92vh] bg-[#072018] border-0 sm:border border-white/20 rounded-none sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden text-white"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Lightbox Header Bar */}
-            <div className="flex-shrink-0 px-4 sm:px-6 py-3.5 bg-[#051812] border-b border-white/10 flex items-center justify-between z-20">
-              <div className="flex items-center space-x-3">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#229938] text-white">
-                  {lightboxMenu.menuNumber}
-                </span>
-                <div>
-                  <h3 className="font-serif text-sm sm:text-lg text-white font-normal truncate max-w-[240px] sm:max-w-md">
-                    {lightboxMenu.title}
-                  </h3>
-                  <span className="text-[10px] text-gray-400 block font-light">
-                    Actual printed menu card from {lightboxMenu.location}
+            {/* Lightbox Header Bar with Mobile Back & Zoom Controls */}
+            <div className="flex-shrink-0 px-3 sm:px-6 py-2.5 sm:py-3.5 bg-[#051812] border-b border-white/10 flex items-center justify-between gap-2 z-20">
+              {/* Left: Prominent Mobile Back / Close Button */}
+              <div className="flex items-center space-x-2 min-w-0">
+                <button
+                  onClick={handleCloseLightbox}
+                  className="px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-all cursor-pointer flex items-center space-x-1.5 flex-shrink-0 border border-white/15"
+                  aria-label="Go back"
+                >
+                  <ArrowLeft className="w-4 h-4 text-emerald-400" />
+                  <span className="text-xs font-semibold tracking-wider uppercase">Back</span>
+                </button>
+
+                <div className="flex items-center space-x-2 truncate">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#229938] text-white flex-shrink-0">
+                    {lightboxMenu.menuNumber}
                   </span>
+                  <div className="truncate hidden xs:block">
+                    <h3 className="font-serif text-xs sm:text-base text-white font-normal truncate">
+                      {lightboxMenu.title}
+                    </h3>
+                  </div>
                 </div>
               </div>
 
               {/* Controls */}
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
                 {/* Zoom Controls */}
-                <div className="hidden sm:flex items-center space-x-1 bg-white/10 rounded-lg p-1 border border-white/10">
+                <div className="flex items-center space-x-0.5 sm:space-x-1 bg-white/10 rounded-full p-0.5 sm:p-1 border border-white/10">
                   <button
                     onClick={handleZoomOut}
-                    className="p-1.5 rounded hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer"
+                    className="p-1 sm:p-1.5 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer"
                     title="Zoom Out"
+                    aria-label="Zoom Out"
                   >
-                    <ZoomOut className="w-4 h-4" />
+                    <ZoomOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </button>
-                  <span className="text-[11px] font-mono px-2 text-emerald-400">
+                  <span className="text-[10px] sm:text-[11px] font-mono px-1 sm:px-2 text-emerald-400 min-w-[36px] text-center">
                     {Math.round(zoomLevel * 100)}%
                   </span>
                   <button
                     onClick={handleZoomIn}
-                    className="p-1.5 rounded hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer"
+                    className="p-1 sm:p-1.5 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer"
                     title="Zoom In"
+                    aria-label="Zoom In"
                   >
-                    <ZoomIn className="w-4 h-4" />
+                    <ZoomIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </button>
                   <button
                     onClick={handleResetZoom}
-                    className="p-1.5 rounded hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer"
+                    className="p-1 sm:p-1.5 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer hidden sm:inline-flex"
                     title="Reset Zoom"
+                    aria-label="Reset Zoom"
                   >
-                    <RotateCcw className="w-3.5 h-3.5" />
+                    <RotateCcw className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   </button>
                 </div>
 
                 <button
                   onClick={handleCloseLightbox}
-                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 hover:text-white transition-colors cursor-pointer"
+                  className="p-1.5 sm:p-2 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-gray-200 hover:text-white transition-colors cursor-pointer min-w-[34px] min-h-[34px] flex items-center justify-center border border-white/10"
                   aria-label="Close menu lightbox"
+                  title="Close"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
             </div>
 
             {/* Scrollable / Zoomable Card Viewport */}
-            <div className="flex-1 overflow-auto p-4 flex items-center justify-center bg-[#030e0a]">
+            <div className="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-[#030e0a] touch-pan-x touch-pan-y">
               <div
                 className="relative transition-transform duration-200 ease-out flex items-center justify-center max-w-full max-h-full"
                 style={{
@@ -458,41 +500,45 @@ export default function RealMenusGallery({
                     width={800}
                     height={1100}
                     priority
-                    className="object-contain max-h-[75vh] w-auto rounded-xl"
+                    className="object-contain max-h-[72vh] sm:max-h-[75vh] w-auto rounded-xl"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Lightbox Footer Bar with WhatsApp CTA */}
-            <div className="flex-shrink-0 px-4 sm:px-6 py-3 bg-[#051812] border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 z-20">
-              <div className="text-xs text-gray-300 font-light text-center sm:text-left">
-                <span>Want this exact menu setup for your celebration?</span>
-                <span className="hidden md:inline text-emerald-400 ml-1">
-                  We cater to any guest count across Ernakulam, Idukki & Kottayam.
-                </span>
-              </div>
+            {/* Lightbox Footer Bar with Back / WhatsApp CTA */}
+            <div className="flex-shrink-0 px-3 sm:px-6 py-2.5 sm:py-3 bg-[#051812] border-t border-white/10 flex items-center justify-between gap-2 z-20">
+              {/* Back / Close button in footer for mobile thumbs */}
+              <button
+                onClick={handleCloseLightbox}
+                className="px-3 sm:px-4 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-colors flex items-center justify-center space-x-1.5 flex-shrink-0 border border-white/15 cursor-pointer"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Close</span>
+              </button>
 
-              <div className="flex items-center space-x-3 w-full sm:w-auto">
+              <div className="flex items-center space-x-2 flex-1 sm:flex-initial justify-end">
                 <button
                   onClick={() => handleWhatsAppEnquiry(lightboxMenu)}
-                  className="flex-1 sm:flex-initial px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                  className="flex-1 sm:flex-initial px-3.5 sm:px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] active:scale-95 text-white shadow-md transition-all flex items-center justify-center space-x-1.5 cursor-pointer truncate"
                 >
-                  <WhatsAppSolidIcon className="w-3.5 h-3.5 text-white" />
-                  <span>Enquire on WhatsApp</span>
+                  <WhatsAppSolidIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
+                  <span className="truncate">Enquire on WhatsApp</span>
                 </button>
 
                 <a
                   href={`tel:${siteConfig.contact.phonePrimary.replace(/[^0-9+]/g, "")}`}
-                  className="px-4 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center space-x-1.5"
+                  className="px-3 sm:px-4 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-colors flex items-center justify-center space-x-1 flex-shrink-0 border border-white/15"
+                  aria-label="Call Us"
                 >
                   <Phone className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="hidden sm:inline">Call Us</span>
+                  <span className="hidden xs:inline">Call</span>
                 </a>
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

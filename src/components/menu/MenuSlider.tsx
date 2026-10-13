@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import {
   ChevronLeft,
   ChevronRight,
+  ArrowLeft,
   Maximize2,
   ZoomIn,
   ZoomOut,
@@ -52,6 +54,32 @@ export default function MenuSlider({ className = "" }: MenuSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll and handle Escape key when lightbox is open
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setLightboxOpen(false);
+        setZoomLevel(1);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [lightboxOpen]);
 
   // Fetch real menu cards uploaded from CMS database
   useEffect(() => {
@@ -319,32 +347,50 @@ export default function MenuSlider({ className = "" }: MenuSliderProps) {
       </div>
 
       {/* ======================================================== */}
-      {/* FULLSCREEN LIGHTBOX (Fully mobile optimized) */}
+      {/* FULLSCREEN LIGHTBOX (Fully mobile optimized & portaled)  */}
       {/* ======================================================== */}
-      {lightboxOpen && (
+      {mounted && lightboxOpen && createPortal(
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-1 sm:p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md p-0 sm:p-4 animate-in fade-in duration-200"
           onClick={() => {
             setLightboxOpen(false);
             setZoomLevel(1);
           }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${activeMenu.title} full view`}
         >
           <div
-            className="relative w-full max-w-4xl h-[95vh] sm:h-[92vh] bg-[#072018] border border-white/20 rounded-2xl sm:rounded-4xl shadow-2xl flex flex-col overflow-hidden text-white"
+            className="relative w-full max-w-4xl h-[100dvh] sm:h-[92vh] bg-[#072018] border-0 sm:border border-white/20 rounded-none sm:rounded-4xl shadow-2xl flex flex-col overflow-hidden text-white"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Lightbox Header with Mobile Zoom Controls */}
-            <div className="flex-shrink-0 px-3 sm:px-6 py-2.5 sm:py-3 bg-[#051812] border-b border-white/10 flex items-center justify-between z-20">
-              <div className="flex items-center space-x-2 truncate">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#229938] text-white flex-shrink-0">
-                  {activeMenu.title}
-                </span>
-                <span className="text-[11px] sm:text-xs text-gray-300 font-light truncate">
-                  Menu Card
-                </span>
+            {/* Lightbox Header with Mobile Back & Zoom Controls */}
+            <div className="flex-shrink-0 px-3 sm:px-6 py-2.5 sm:py-3.5 bg-[#051812] border-b border-white/10 flex items-center justify-between gap-2 z-20">
+              {/* Left: Prominent Mobile Back / Close Button */}
+              <div className="flex items-center space-x-2 min-w-0">
+                <button
+                  onClick={() => {
+                    setLightboxOpen(false);
+                    setZoomLevel(1);
+                  }}
+                  className="px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-all cursor-pointer flex items-center space-x-1.5 flex-shrink-0 border border-white/15"
+                  aria-label="Go back to menu list"
+                >
+                  <ArrowLeft className="w-4 h-4 text-emerald-400" />
+                  <span className="text-xs font-semibold tracking-wider uppercase">Back</span>
+                </button>
+
+                <div className="hidden xs:flex items-center space-x-1.5 truncate">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#229938] text-white flex-shrink-0">
+                    {activeMenu.title}
+                  </span>
+                  <span className="text-[11px] text-gray-300 font-light truncate hidden sm:inline">
+                    Menu Card
+                  </span>
+                </div>
               </div>
 
-              {/* Controls: Zoom In/Out Visible on Mobile & Desktop */}
+              {/* Center / Right: Zoom In/Out & X Button */}
               <div className="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
                 <div className="flex items-center space-x-0.5 sm:space-x-1 bg-white/10 rounded-full p-0.5 sm:p-1 border border-white/10">
                   <button
@@ -355,7 +401,7 @@ export default function MenuSlider({ className = "" }: MenuSliderProps) {
                   >
                     <ZoomOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </button>
-                  <span className="text-[10px] sm:text-[11px] font-mono px-1 sm:px-2 text-emerald-400">
+                  <span className="text-[10px] sm:text-[11px] font-mono px-1 sm:px-2 text-emerald-400 min-w-[36px] text-center">
                     {Math.round(zoomLevel * 100)}%
                   </span>
                   <button
@@ -368,7 +414,7 @@ export default function MenuSlider({ className = "" }: MenuSliderProps) {
                   </button>
                   <button
                     onClick={() => setZoomLevel(1)}
-                    className="p-1 sm:p-1.5 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer"
+                    className="p-1 sm:p-1.5 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer hidden sm:inline-flex"
                     title="Reset Zoom"
                     aria-label="Reset Zoom"
                   >
@@ -381,8 +427,9 @@ export default function MenuSlider({ className = "" }: MenuSliderProps) {
                     setLightboxOpen(false);
                     setZoomLevel(1);
                   }}
-                  className="p-1.5 sm:p-2 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 hover:text-white transition-colors cursor-pointer min-w-[34px] min-h-[34px] flex items-center justify-center"
+                  className="p-1.5 sm:p-2 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-gray-200 hover:text-white transition-colors cursor-pointer min-w-[34px] min-h-[34px] flex items-center justify-center border border-white/10"
                   aria-label="Close"
+                  title="Close"
                 >
                   <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
@@ -390,7 +437,7 @@ export default function MenuSlider({ className = "" }: MenuSliderProps) {
             </div>
 
             {/* Image Viewport */}
-            <div className="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-[#030e0a]">
+            <div className="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-[#030e0a] touch-pan-x touch-pan-y">
               <div
                 className="relative transition-transform duration-200 ease-out flex items-center justify-center max-w-full max-h-full"
                 style={{
@@ -405,30 +452,39 @@ export default function MenuSlider({ className = "" }: MenuSliderProps) {
                     width={800}
                     height={1100}
                     priority
-                    className="object-contain max-h-[75vh] w-auto rounded-xl sm:rounded-2xl"
+                    className="object-contain max-h-[72vh] sm:max-h-[75vh] w-auto rounded-xl sm:rounded-2xl"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Mobile-Friendly Lightbox Footer */}
+            {/* Mobile-Friendly Lightbox Footer with Dedicated Close / Back Button */}
             <div className="flex-shrink-0 px-3 sm:px-6 py-2.5 sm:py-3 bg-[#051812] border-t border-white/10 flex items-center justify-between gap-2 z-20">
-              <span className="text-[11px] sm:text-xs text-gray-300 font-light hidden sm:inline">
-                Tap + to zoom in and read dishes.
-              </span>
+              {/* Back / Close button in footer (one-thumb reach) */}
+              <button
+                onClick={() => {
+                  setLightboxOpen(false);
+                  setZoomLevel(1);
+                }}
+                className="px-3 sm:px-4 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-colors flex items-center justify-center space-x-1.5 flex-shrink-0 border border-white/15 cursor-pointer"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Close</span>
+              </button>
 
-              <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
+              <div className="flex items-center space-x-2 flex-1 sm:flex-initial justify-end">
                 <button
                   onClick={() => handleWhatsAppEnquiry(activeMenu)}
-                  className="flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] text-white shadow-md transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
+                  className="flex-1 sm:flex-initial px-3.5 sm:px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#229938] hover:bg-[#1c822e] active:scale-95 text-white shadow-md transition-all flex items-center justify-center space-x-1.5 cursor-pointer truncate"
                 >
-                  <WhatsAppSolidIcon className="w-3.5 h-3.5 text-white" />
-                  <span>Enquire on WhatsApp</span>
+                  <WhatsAppSolidIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
+                  <span className="truncate">Enquire on WhatsApp</span>
                 </button>
 
                 <a
                   href={`tel:${siteConfig.contact.phonePrimary.replace(/[^0-9+]/g, "")}`}
-                  className="px-3 sm:px-4 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center space-x-1 flex-shrink-0"
+                  className="px-3 sm:px-4 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-colors flex items-center justify-center space-x-1 flex-shrink-0 border border-white/15"
+                  aria-label="Call Green Apple"
                 >
                   <Phone className="w-3.5 h-3.5 text-emerald-400" />
                   <span className="hidden xs:inline">Call</span>
@@ -436,7 +492,8 @@ export default function MenuSlider({ className = "" }: MenuSliderProps) {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

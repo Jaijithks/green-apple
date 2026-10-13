@@ -63,7 +63,7 @@ export default function Navbar({ onOpenQuote, onOpenMenuBuilder }: NavbarProps) 
     <>
       {/* Sticky Floating Bar when scrolled */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ease-in-out ${
           isScrolled
             ? "translate-y-0 bg-[#072018]/95 backdrop-blur-md border-b border-white/10 shadow-2xl py-2.5"
             : "-translate-y-full py-2.5 pointer-events-none"
